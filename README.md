@@ -34,7 +34,7 @@
 
 | Pytanie                                 | Odpowiedź                                               | Uwagi                          |
 |-----------------------------------------|---------------------------------------------------------|--------------------------------|
-| W jakim terminie należy oddać aplikację?| 6 listopada 2024 (środa)                                |                                |
+| W jakim terminie należy oddać aplikację?| Koniec stycznia 2025                                    |                                |
 | Jakie funkcjonalności są priorytetowe?  | Transkrypcja, zapis zrzutów ekranu, OCR                 |                                |
 | W jakiej formie ma być aplikacja?       | Aplikacja webowa lub wtyczka                            | Wtyczka jako opcjonalne rozwiązanie |
 | Jak zarządzać spotkaniami?              | Integracja z kalendarzem i platformami (Zoom, Teams)    |                                |
