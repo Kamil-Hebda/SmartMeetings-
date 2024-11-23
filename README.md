@@ -13,7 +13,7 @@
 | Kompetencje              | Kamil | Paweł | Szymon |
 |--------------------------|-------|-------|--------|
 | Znajomość algorytmów     | TAK   | TAK   | TAK    |
-| Znajomość Excela         | TAK   | TAK   | NIE    |
+| Uczenie maszynowe        | TAK   | TAK   | NIE    |
 | Znajomość j. angielskiego| TAK   | TAK   | TAK    |
 | Obsługa GitHub           | TAK   | TAK   | TAK    |
 | Programowanie Python     | TAK   | TAK   | TAK    |
@@ -23,6 +23,10 @@
 | Znajomość API            | TAK   | TAK   | TAK    |
 | Praca w grupie           | TAK   | TAK   | TAK    |
 | Testowanie oprogramowania| TAK   | TAK   | TAK    |
+| React                    | NIE   | NIE   | TAK    |
+| HTML                     | TAK   | TAK   | TAK    |
+| CSS                      | NIE   | NIE   | TAK    |
+
 
 ---
 
