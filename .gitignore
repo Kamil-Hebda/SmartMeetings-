@@ -154,6 +154,57 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# Ignoruj katalog node_modules
+node_modules/
+
+# Ignoruj pliki logów
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignoruj pliki środowiska IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignoruj pliki systemowe
+.DS_Store
+Thumbs.db
+
+# Ignoruj pliki buildów
+dist/
+build/
+
+# Ignoruj pliki tymczasowe
+*.tmp
+*.temp
+
+# Ignoruj pliki konfiguracyjne systemu operacyjnego
+*.swp
+*.swo
+*.bak
+*.orig
+
+# Ignoruj pliki konfiguracyjne narzędzi
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignoruj pliki cache
+.cache/
+.tmp/
+
+# Ignoruj pliki testowe
+coverage/
+*.lcov
+
+# Ignoruj pliki zależności
+package-lock.json
+yarn.lock
+
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
