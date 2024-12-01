@@ -1,0 +1,19 @@
+{
+    "manifest_version": 3,
+    "name": "Smart Meetings", 
+    "version": "0.1.0",
+    "description": "Transcript and summary of your meetings",
+    "permissions": ["storage", "tabs", "activeTab", "scripting"],
+    "background": {
+        "service_worker": "scripts/background.js"
+    },
+    "action": {
+        "default_icon": {
+            "16": "assets/ext-icon.png",
+            "24": "assets/ext-icon.png",
+            "32": "assets/ext-icon.png"
+        },
+        "default_title": "Smart Meetings",
+        "default_popup": "popup.html"
+    }
+}
