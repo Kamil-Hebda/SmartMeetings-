@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify, render_template
 import whisper
 import cohere
 
-co = cohere.Client("8Qf5d4Kl0WjCJ2DXCwWzcLZRzceN1I71yytMxVRL")
+co = cohere.Client("API_KEY")
 
 
 def transcribe_video(video_path, transcription_precision):
