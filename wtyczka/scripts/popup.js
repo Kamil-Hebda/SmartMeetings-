@@ -69,3 +69,68 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Element with id "startStopRecording" not found.');
     }
   });
+
+const recordTab = document.getElementById('tab');
+const recordScreen = document.getElementById('screen');
+
+const injectCamera = async () => {
+  const tab = await chrome.tabs.query({ active: true, currentWindow: true });
+  if(!tab) return;
+
+  const tabId = tab[0].id;
+  console.log('Tab ID:', tabId);
+  await chrome.scripting.executeScript({
+      files: ['content.js'],
+      target: { tabId }
+  });
+}
+
+
+const checkRecording = async () => {
+  const recording = await chrome.storage.local.get(['recording', 'type']);
+  const recordingStatus = recording.recording || false;
+  const recordingType = recording.type || '';
+  console.log('Recording status:', recordingStatus, recordingType);
+  return { recordingStatus, recordingType };
+}
+
+const init = async () => {
+  const recordingState = await checkRecording();
+
+  console.log('Recording state:', recordingState);
+
+  if (recordingState[0] === true) {
+    if(recordingState[1] === 'tab') {
+      recordTab.innerText = 'Stop recording';
+    } else {
+      recordScreen.innerText = 'Stop recording';
+    }
+  }
+
+  const updateRecording = async (type) => {
+    console.log('start-recording', type)
+
+    const recordingState = await checkRecording();
+
+    if (recordingState[0] === true) {
+      await chrome.runtime.sendMessage({ type: 'stop-recording' });
+    } else {
+      await chrome.runtime.sendMessage({ type: 'start-recording', recordingType: type });
+
+      injectCamera();
+    }
+
+  }
+
+  recordTab.addEventListener('click', async() => {
+    console.log('tab button clicked');
+    updateRecording('tab');
+  })
+
+  recordScreen.addEventListener('click', async() => {
+    console.log('screen button clicked');
+    updateRecording('screen');
+  })
+}
+
+init()
