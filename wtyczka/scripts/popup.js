@@ -85,6 +85,23 @@ const injectCamera = async () => {
   });
 }
 
+const removeCamera = async () => {
+  // inject the content script into the current page
+  const tab = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab) return;
+
+  const tabId = tab[0].id;
+  console.log("inject into tab", tabId);
+  await chrome.scripting.executeScript({
+    // content.js is the file that will be injected
+    func: () => {
+      const camera = document.querySelector("#camera1");
+      if (!camera) return;
+      document.querySelector("#camera1").style.display = "none";
+    },
+    target: { tabId },
+  });
+};
 
 const checkRecording = async () => {
   const recording = await chrome.storage.local.get(['recording', 'type']);
@@ -114,12 +131,14 @@ const init = async () => {
 
     if (recordingState[0] === true) {
       await chrome.runtime.sendMessage({ type: 'stop-recording' });
+      removeCamera();
     } else {
-      await chrome.runtime.sendMessage({ type: 'start-recording', recordingType: type });
+      chrome.runtime.sendMessage({ type: 'start-recording', recordingType: type });
 
       injectCamera();
     }
 
+    window.close();
   }
 
   recordTab.addEventListener('click', async() => {
@@ -130,7 +149,7 @@ const init = async () => {
   recordScreen.addEventListener('click', async() => {
     console.log('screen button clicked');
     updateRecording('screen');
-  })
-}
+  });
+};
 
-init()
+init();

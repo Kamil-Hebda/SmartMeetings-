@@ -1,27 +1,38 @@
 {
-    "manifest_version": 3,
     "name": "Smart Meetings",
     "version": "1.0",
-    "minimum_chrome_version": "116",
+    "manifest_version": 3,
     "description": "Transcript and summary of your meetings",
-    "permissions": ["storage", "tabs", "activeTab", "downloads", "desktopCapture", "scripting", "tabCapture", "offscreen"],
-    "background": {
-        "service_worker": "scripts/background2.js"
-    },
-    "host_permissions": ["<all_urls>"],
+    "minimum_chrome_version": "116",
     "action": {
         "default_icon": {
-            "16": "assets/ext-icon.png",
-            "24": "assets/ext-icon.png",
-            "32": "assets/ext-icon.png"
+            "16": "icons/not-recording.png",
+            "32": "icons/not-recording.png"
         },
-        "default_title": "Smart Meetings",
         "default_popup": "popup.html"
     },
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "service-worker.js"
+    },
+    "permissions": [
+        "tabCapture",
+        "offscreen",
+        "scripting",
+        "storage",
+        "desktopCapture",
+        "tabs"
+    ],
     "web_accessible_resources": [
         {
-            "resources": ["camera.html", "scripts/camera.js", "video.html", "scripts/video.js"],
-            "matches": ["<all_urls>"]
+            "resources": [
+                "video.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
         }
     ]
 }
