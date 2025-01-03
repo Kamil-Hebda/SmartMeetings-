@@ -17,9 +17,9 @@ const init = async () => {
 
   if (recordingState[0] === true) {
     if (recordingState[1] === "tab") {
-      recordTab.innerText = "Stop Recording";
+      recordTab.innerText = "Zatrzymaj nagrywanie karty";
     } else {
-      recordScreen.innerText = "Stop Recording";
+      recordScreen.innerText = "Zatrzymaj nagrywanie ekranu";
     }
   }
 

@@ -139,6 +139,22 @@ const recordTabState = async (start = true) => {
   }
 };
 
+// const downloadVideo = (videoUrl) => {
+//   console.log("Attempting to download video from: ", videoUrl);
+
+//   // Tworzymy element 'a' do pobrania
+//   const link = document.createElement('a');
+//   link.href = videoUrl;
+//   link.download = 'recorded_video.webm'; // Możesz zmienić nazwę pliku i rozszerzenie
+//   document.body.appendChild(link);
+
+//   // Klikamy element, aby rozpocząć pobieranie
+//   link.click();
+
+//   // Usuwamy element z DOM
+//   document.body.removeChild(link);
+// };
+
 const openTabWithVideo = async (message) => {
   console.log("request to open tab with video", message);
 
@@ -159,6 +175,8 @@ const openTabWithVideo = async (message) => {
       base64,
     });
   }, 500);
+
+  // downloadVideo(videoUrl);
 };
 
 // add listender for messages
