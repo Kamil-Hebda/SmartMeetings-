@@ -1,5 +1,7 @@
 const recordTab = document.querySelector("#tab");
 const recordScreen = document.querySelector("#screen");
+const generateNotesButton = document.querySelector("#generate_ss");
+
 
 // check chrome storage if recording is on
 const checkRecording = async () => {
@@ -42,6 +44,12 @@ const init = async () => {
     // close popup
     window.close();
   };
+
+   generateNotesButton.addEventListener('click', function() {
+        const notesService = 'http://localhost:8080/';
+        window.open(notesService, '_blank');
+    });
+
 
   recordTab.addEventListener("click", async () => {
     console.log("updateRecording tab clicked");

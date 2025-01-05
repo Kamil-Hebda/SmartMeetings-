@@ -1,4 +1,3 @@
-import time
 import cv2
 import os
 import numpy as np
@@ -69,8 +68,3 @@ def save_frame_async(path, frame):
     cv2.imwrite(path, frame)
 
 
-start = time.time()
-video_file = 'lectures/BAWIM.mp4'
-extract_frames(video_file, frame_rate=2)
-stop = time.time()
-print("czas wykonania: ", float(stop - start))
