@@ -5,3 +5,5 @@ Flask-CORS
 pyannote.audio
 python-dotenv
 pydub
+numpy
+cv2
