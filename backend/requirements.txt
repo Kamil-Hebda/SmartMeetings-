@@ -7,3 +7,5 @@ python-dotenv
 pydub
 numpy
 cv2
+flask
+opencv-python
