@@ -1,70 +1,34 @@
 import { useState } from 'react';
 import FileUpload from '../components/FileUpload';
 import NotesDisplay from '../components/NotesDisplay';
+import AskModel from '../components/AskModel'; // Import nowego komponentu
 import '../App.css';
-import AskModel from '../components/AskModel';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
-/**
- * Komponent Home:
- * - Zarządza stanem potrzebnym do obsługi przesłanego wideo, notatek oraz dodatkowych opcji (checkboxy).
- * - Wyświetla dwa główne komponenty:
- *   1) FileUpload – umożliwia przesłanie pliku wideo,
- *   2) NotesDisplay – generuje notatki zgodnie z zaznaczonymi opcjami.
- */
 const Home = () => {
-  /**
-   * videoPath: przechowuje aktualną ścieżkę do przesłanego wideo.
-   */
+  const [activeTab, setActiveTab] = useState('Notes');
   const [videoPath, setVideoPath] = useState(null);
-
-  /**
-   * message: przechowuje komunikat zwracany po wygenerowaniu notatek.
-   * Może to być np. status, błąd lub inna informacja.
-   */
   const [message, setMessage] = useState(null);
-
-  /**
-   * options: obiekt zawierający wybrane opcje przez użytkownika,
-   * np. transcription, ocr, screenshot, diarization – wszystkie typu boolean.
-   */
   const [options, setOptions] = useState({
     transcription: false,
     ocr: false,
     screenshot: false,
     diarization: false
   });
+  const [notes, setNotes] = useState('');
 
-  /**
-   * prompt: przechowuje dodatkowy tekst (kontekst) do wygenerowania notatek.
-   */
-  const [prompt, setPrompt] = useState('');
-
-  const[notes, setNotes] = useState('');
-
-  /**
-   * Funkcja handleFileUpload:
-   * - Wywoływana po udanym wgraniu pliku przez komponent FileUpload.
-   * - Ustawia w stanie ścieżkę do wideo, którą zwraca serwer.
-   */
   const handleFileUpload = (path) => {
     setVideoPath(path);
   };
 
-  /**
-   * Funkcja handleNotesUpdate:
-   * - Wywoływana przez komponent NotesDisplay.
-   * - Odbiera komunikat (np. błąd lub status) i ustawia go w stanie message.
-   */
   const handleNotesUpdate = (data) => {
     setMessage(data.message);
     setNotes(data.notes);
   };
 
-  /**
-   * Funkcja handleOptionChange:
-   * - Obsługuje zaznaczanie/odznaczanie opcji w checkboxach.
-   * - Aktualizuje stan (options), zależnie od nazwy checkboxa i wartości zaznaczenia.
-   */
   const handleOptionChange = (e) => {
     const { name, checked } = e.target;
     setOptions((prevOptions) => ({
@@ -73,68 +37,130 @@ const Home = () => {
     }));
   };
 
-  /**
-   * W części JSX:
-   * - Wyświetlamy nagłówek Smart Meetings.
-   * - Gdy message jest ustawione, renderujemy paragraf z komunikatem.
-   * - Tworzymy układ z sekcją po lewej (textarea i checkboksy) oraz po prawej (FileUpload i NotesDisplay).
-   */
   return (
     <div className="container">
-      <h1>Smart Meetings</h1>
-      {message && <p>{message}</p>}
-      <div className="main-content">
-        <div className="left-panel">
-          <h2>Prompt for Chat</h2>
-          <textarea
-            placeholder="Enter your prompt here..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            className="prompt-box"
-          ></textarea>
-          <AskModel notes={notes} prompt={prompt} />
-        </div>
-        <div className="right-panel">
-          <div className="feature-box">
-            <h2>Notes Options</h2>
-            <div className="options">
-              <label>
-                <input
-                  type="checkbox"
-                  name="transcription"
-                  onChange={handleOptionChange}
-                /> Transcription
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="ocr"
-                  onChange={handleOptionChange}
-                /> OCR
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="screenshot"
-                  onChange={handleOptionChange}
-                /> Screenshot
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="diarization"
-                  onChange={handleOptionChange}
-                /> Diarization
-              </label>
+      <h1>Smart Meetings</h1>      
+      <ButtonGroup 
+        variant="contained" 
+        aria-label="contained primary button group" 
+        className="tab-buttons"
+        style={{ 
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+          border: 0,
+          boxShadow: 'none',
+         }} // Remove border radius
+      >
+        <Button 
+          className='tab-button'
+          onClick={() => setActiveTab('Notes')} 
+          style={{ backgroundColor: activeTab === 'Notes' ? '#BFB3A4' : '#403E3B',
+          borderBottomLeftRadius: 0,
+          borderBottom: 0,
+          borderColor: '#403E3B',
+           }}
+        >
+          Notes
+        </Button>
+        <Button 
+          className='tab-button'
+          onClick={() => setActiveTab('AskChat')} 
+          style={{ backgroundColor: activeTab === 'AskChat' ? '#BFB3A4' : '#403E3B',
+            borderColor: '#403E3B',
+           }}
+        >
+          Ask Chat
+        </Button>
+        <Button 
+          className='tab-button'
+          onClick={() => setActiveTab('SendMail')} 
+          style={{ backgroundColor: activeTab === 'SendMail' ? '#BFB3A4' : '#403E3B',
+            borderColor: '#403E3B',
+           }}
+        >
+          Send Mail
+        </Button>
+        <Button 
+          className='tab-button'
+          onClick={() => setActiveTab('PlanMeeting')} 
+          style={{ backgroundColor: activeTab === 'PlanMeeting' ? '#BFB3A4' : '#403E3B',
+          borderBottomRightRadius: 0,
+          borderBottom: 0,
+          borderColor: '#403E3B',
+           }}
+        >
+          Plan Meeting
+        </Button>
+      </ButtonGroup>
+
+      <div className="tab-content">
+        {activeTab === 'Notes' && (
+          <div className="notes-content">
+            <div className="left-panel">
+              {/* Pozostawienie zawartości sekcji "Notes" */}
             </div>
-            <FileUpload onUpload={handleFileUpload} />
-            <NotesDisplay
-              videoPath={videoPath}
-              options={options}
-              onUpdate={handleNotesUpdate}
-            />
+            <div className="right-panel">
+              <div className="feature-box">
+                <h2>Notes Options</h2>
+                <div className="options">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="transcription"
+                        checked={options.transcription}
+                        onChange={handleOptionChange}
+                        style={{ color: '#403E3B' }}
+                      />
+                    }
+                    label="Transcription"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="ocr"
+                        checked={options.ocr}
+                        onChange={handleOptionChange}
+                        style={{ color: '#403E3B' }}
+                      />
+                    }
+                    label="OCR"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="screenshot"
+                        checked={options.screenshot}
+                        onChange={handleOptionChange}
+                        style={{ color: '#403E3B' }}
+                      />
+                    }
+                    label="Screenshot"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="diarization"
+                        checked={options.diarization}
+                        onChange={handleOptionChange}
+                        style={{ color: '#403E3B' }}
+                      />
+                    }
+                    label="Diarization"
+                  />
+                </div>
+                <FileUpload onUpload={handleFileUpload} />
+                <NotesDisplay
+                  videoPath={videoPath}
+                  options={options}
+                  onUpdate={handleNotesUpdate}
+                />
+              </div>
+            </div>
           </div>
-        </div>
+        )}
+        {activeTab === 'AskChat' && <AskModel notes={notes} />}
+        {activeTab === 'SendMail' && <div>Send Mail Content</div>}
+        {activeTab === 'PlanMeeting' && <div>Plan Meeting Content</div>}
       </div>
     </div>
   );

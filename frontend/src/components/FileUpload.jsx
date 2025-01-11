@@ -1,32 +1,18 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { uploadVideo } from '../services/api';
-import './FileUpload.css';
+import TextField from '@mui/material/TextField';
 
-/**
- * Komponent FileUpload pozwala użytkownikowi wybrać i wgrać plik wideo.
- * - onUpload: funkcja przekazana w propsach, wywoływana po pomyślnym wgraniu pliku
- */
 const FileUpload = ({ onUpload }) => {
-    // Przechowujemy wybrany plik w stanie komponentu
     const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [uploaded, setUploaded] = useState(false);
 
-    /**
-     * handleFileChange:
-     * - Aktualizuje stan 'file' na wybrany przez użytkownika plik (e.target.files[0])
-     */
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
+        setUploaded(false); // Reset uploaded state when a new file is selected
     };
 
-    /**
-     * handleSubmit:
-     * - Zapobiega domyślnemu wysłaniu formularza
-     * - Sprawdza czy wybrano plik
-     * - Tworzy FormData i dołącza wybrany plik
-     * - Za pomocą uploadVideo wysyła dane na serwer
-     * - Jeśli serwer zwróci video_path, wywołuje onUpload z tą ścieżką
-     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!file) {
@@ -37,35 +23,41 @@ const FileUpload = ({ onUpload }) => {
         const formData = new FormData();
         formData.append('video_file', file);
 
+        setLoading(true);
         try {
             const response = await uploadVideo(formData);
             console.log(response);
             if (response.data.video_path) {
                 onUpload(response.data.video_path);
+                setUploaded(true); // Set uploaded state to true after successful upload
             }
         } catch (error) {
             console.error('Error uploading file:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Render formularza umożliwiającego przesłanie pliku wideo
     return (
-        <div className="feature-box">
-            <i className="fas fa-upload fa-3x mb-3"></i>
-            <h4>Import Video</h4>
+        <div className="left-panel">
+            <h2>Import Video</h2>
             <p>Upload a video file from your computer.</p>
             <form onSubmit={handleSubmit}>
-                <input
+                <TextField
                     type="file"
                     name="video_file"
-                    className="form-control"
                     onChange={handleFileChange}
+                    variant="outlined"
+                    fullWidth
                 />
-                <button type="submit" className="btn btn-primary mt-2">Upload File</button>
+                <button type="submit" disabled={loading || uploaded} className="btn btn-primary mt-2">
+                    {loading ? 'Uploading...' : uploaded ? 'File Uploaded' : 'Upload File'}
+                </button>
             </form>
         </div>
     );
 };
+
 FileUpload.propTypes = {
     onUpload: PropTypes.func.isRequired,
 };

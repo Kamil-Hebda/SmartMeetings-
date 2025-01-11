@@ -42,14 +42,18 @@ def generate_screenshots():
     start = time.time()
     try:
         screenshots_dir = extract_frames(video_path)
+        print(f"Screenshots created successfully: {screenshots_dir}")
+        screenshots = [os.path.join(screenshots_dir, f) for f in os.listdir(screenshots_dir)]
     except Exception as e:
+        current_app.logger.error(f"Error generating screenshots: {e}", exc_info=True)
         return jsonify({'message': f"Error generating screenshots: {e}"}), 500
     stop = time.time()
     return jsonify({
-        'message': "Screenshots created succesfully",
-        'screenshots_dir': screenshots_dir,
+        'message': "Screenshots created successfully",
+        'screenshots': screenshots,
         'execution_time': stop - start
     }), 200
+
 
 
 import logging

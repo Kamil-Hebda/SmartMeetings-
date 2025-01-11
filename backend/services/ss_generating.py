@@ -43,6 +43,8 @@ def extract_frames(video_path, frame_rate=1):
     cap.release()
     executor.shutdown()
 
+    return ss_dir
+
 
 def format_time(seconds):
     minutes = int(seconds // 60)
