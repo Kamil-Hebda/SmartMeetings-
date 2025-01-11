@@ -20,6 +20,8 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 hugging_face_auth_token = os.getenv("HUGGING_FACE_AUTH_TOKEN")
 
+print(hugging_face_auth_token)
+
 # Model diarization
 pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization-3.1",
                                     use_auth_token=hugging_face_auth_token) # token do huggingface

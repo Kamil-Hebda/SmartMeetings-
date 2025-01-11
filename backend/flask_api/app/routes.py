@@ -116,4 +116,5 @@ def generate_chat_notes():
             'notes': summary_result
         }), 200
     except Exception as e:
+        print(f"\n\nError: {e}\n\n")
         return jsonify({'message': f"Error: {e}"}), 500
