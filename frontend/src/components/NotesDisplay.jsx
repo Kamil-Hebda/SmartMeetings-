@@ -2,6 +2,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { generateNotes } from '../services/api';
 import './NotesDisplay.css';
+import EmailSender from './EmailSender';
+import DownloadChatNotes from './DownloadNotes';
 
 /**
  * Komponent NotesDisplay:
@@ -63,6 +65,11 @@ const NotesDisplay = ({ videoPath, options, onUpdate }) => {
             {screenshotsDir && <p>Screenshots created in: {screenshotsDir}</p>}
             {executionTime && <p>Time execution time: {executionTime}</p>}*/}
             {summary && <div dangerouslySetInnerHTML={{ __html: summary }} />}
+            <br />
+            {summary && <EmailSender emailNotes={summary} />}
+            <br />
+            <br />
+            {summary && <DownloadChatNotes downloadedNote={summary} />}
         </div>
     );
 };

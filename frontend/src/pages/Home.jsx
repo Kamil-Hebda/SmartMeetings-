@@ -134,6 +134,7 @@ const Home = () => {
               onUpdate={handleNotesUpdate}
             />
           </div>
+          {/* <EmailSender exampleText='nie weim co to napiac' /> */}
         </div>
       </div>
     </div>
