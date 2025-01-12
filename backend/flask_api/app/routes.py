@@ -119,14 +119,16 @@ def generate_notes():
                 diarization_result = diarize_audio(video_path)
                 transcriptions = format_transcription_with_speakers(transcription_result, diarization_result)
                 for trans in transcriptions:
-                    formatted_transcription.append({"text": trans['text'], "time": trans['start']})
+                     if isinstance(trans, dict) and 'start' in trans:
+                        formatted_transcription.append({"text": trans['text'], "time": trans['start']})
+                     else:
+                        formatted_transcription.append({"text": str(trans), "time": 0})
             else:
-                for trans in transcription_result:
-                    formatted_transcription.append({"text": trans['text'], "time": trans['start']})
-
+                 for trans in transcription_result:
+                   formatted_transcription.append({"text": trans['text'], "time": trans['start']})
+        
         if options['ocr'] and screenshots:
             logging.debug("OCR is enabled.")
-            # Konwersja URL-i na lokalne ścieżki plików
             ocr_paths = [os.path.join(current_app.root_path, os.path.relpath(screenshot, request.host_url)) for screenshot in screenshots]
             
             # Usunięcie 'http://localhost:8080/' z URL-a, aby uzyskać lokalną ścieżkę
@@ -178,11 +180,11 @@ def generate_chat_notes():
     
 @routes_bp.route('/generate_code', methods=['POST'])
 def generate_code():
-    data = request.json
+    data = request.get_json()
     email = data.get('email')
-    
+    print(f"email: {email}")
     if not email:
-        return jsonify({'message': "no adress email provifed"}), 400
+            return jsonify({'message': "No email address provided"}), 400
 
     ver_code = random.randint(100000, 999999)
     verification_codes[email] = ver_code
@@ -193,19 +195,22 @@ def generate_code():
         to=[{"email": email}],
         subject="Smart meetings Verification code",
         html_content=f"Your verification code is: {ver_code}",
-        sender = {"email": "szymongaw853@gmail.com", "name": "Szymon ze Smart Meetings"}
+        sender = {"email": "kamilhebda28@gmail.com", "name": "Kamil ze Smart Meetings"}
     )
         
     try:
-        api_instance.send_transac_email(send_smtp_email)
-        print(ver_code)
-        return jsonify({'message': "Code sent successfully"}), 200
+         print("przed api_instance")
+         api_response = api_instance.send_transac_email(send_smtp_email)
+         print(f"email sent {api_response}")
+         return jsonify({'message': "Code sent successfully"}), 200
     except ApiException as e:
+        print(f"Exception when calling TransactionalEmailsApi->send_transac_email: {e}")
         return jsonify({'message': f"Error: {e}"}), 500
-    
+
+
 @routes_bp.route('/verify_code', methods=['POST'])
 def verify_code():
-    data = request.json
+    data = request.get_json()
     email = data.get('email')
     code = data.get('code')
     
@@ -215,7 +220,7 @@ def verify_code():
         if not email or not code:
             return jsonify({'message': 'No email or code provided'}), 400
         
-        if int(verification_codes[email]) == int(code):
+        if int(verification_codes.get(email)) == int(code):
             return jsonify({'message': 'Code is correct'}), 200
         else:
             return jsonify({'message': 'Invalid code'}), 400
@@ -225,7 +230,7 @@ def verify_code():
     
 @routes_bp.route('/send_notes', methods=['POST'])
 def send_notes():
-    data = request.json
+    data = request.get_json()
     email = data.get('email')
     subject = data.get('subject')
     notes = data.get('notes')
@@ -238,7 +243,7 @@ def send_notes():
         to=[{"email": email}],
         subject=subject,
         html_content = f"<html><body>{notes}</body></html>",
-        sender = {"email": "szymongaw853@gmail.com", "name": "Szymon ze Smart Meetings"} 
+        sender = {"email": "kamilhebda28@gmail.com", "name": "Kamil ze Smart Meetings"} 
     )
     
     try:
@@ -246,3 +251,4 @@ def send_notes():
         return jsonify({'message': 'Notes sent successfully'}), 200
     except ApiException as e:
         return jsonify({'message': f"Error: {e}"}), 500
+    

@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import EmailSender from '../components/EmailSender';
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState('Notes');
@@ -197,7 +198,7 @@ const Home = () => {
           </div>
         )}
         {activeTab === 'AskChat' && <AskModel notes={notes} onPromptChange={handlePromptChange} prompt={prompt} chatResponse={chatResponse} onChatResponseChange={handleChatResponseChange} />}
-        {activeTab === 'SendMail' && <div>Send Mail Content</div>}
+        {activeTab === 'SendMail' && <EmailSender />}
         {activeTab === 'PlanMeeting' && <div>Plan Meeting Content</div>}
 
 

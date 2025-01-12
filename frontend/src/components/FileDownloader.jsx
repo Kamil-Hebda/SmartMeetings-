@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';

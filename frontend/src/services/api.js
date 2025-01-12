@@ -34,3 +34,26 @@ export const generateScreenshots = async (videoPath) => {
     video_path: videoPath,
   });
 };
+
+export const generateCode = async (email) => {
+  return await api.post('/generate_code', {
+    email: email,
+  });
+};
+
+export const verifyCode = async (email, code) => {
+  return await api.post('/verify_code', {
+    email: email,
+    code: code,
+  });
+};
+
+export const sendNotes = async (email, subject, notes) => {
+  return await api.post('/send_notes', {
+    email: email,
+    subject: subject,
+    notes: notes,
+  });
+};
+
+export default api;
