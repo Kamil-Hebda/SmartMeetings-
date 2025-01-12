@@ -18,7 +18,7 @@ export const generateNotes = async (videoPath, options) => {
   return await api.post('/generate_notes', {
       video_path: videoPath,
       options: options,
-      //screenshots: options.screenshots,
+      screenshots: options.screenshots,
     });
 };
 

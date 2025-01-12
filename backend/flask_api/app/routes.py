@@ -1,12 +1,16 @@
-from flask import Blueprint, request, jsonify, current_app
 import os
 import time
-
+from flask import Flask, Blueprint, request, jsonify, current_app
+from flask_cors import CORS
 from backend.services.ss_generating import extract_frames
 from backend.services.transcirption_summary import transcribe_video, diarize_audio, format_transcription_with_speakers, summarize
 from backend.services.OCR_text_generating import ocr_from_frames
+from urllib.parse import quote
 
 routes_bp = Blueprint('routes', __name__)
+
+# Inicjalizacja CORS dla wszystkich tras
+CORS(routes_bp)
 
 @routes_bp.route('/', methods=['GET'])
 def index():
@@ -43,18 +47,27 @@ def generate_screenshots():
     try:
         screenshots_dir = extract_frames(video_path)
         print(f"Screenshots created successfully: {screenshots_dir}")
-        screenshots = [os.path.join(screenshots_dir, f) for f in os.listdir(screenshots_dir)]
+        # Pobieranie listy plików w katalogu ze zrzutami ekranu
+        screenshots = [os.path.join(screenshots_dir, f) for f in os.listdir(screenshots_dir) if os.path.isfile(os.path.join(screenshots_dir, f))]
+        
+        # Konwertowanie ścieżek do URL-i, jeśli to konieczne
+        base_url = request.host_url  # Uzyskanie adresu URL hosta
+        
+        
+        screenshots_urls = [
+            {"path": f"{base_url}{os.path.relpath(f, current_app.root_path).replace(os.sep, '/').replace('../', '')}"}
+            for f in screenshots
+        ]
+    
     except Exception as e:
         current_app.logger.error(f"Error generating screenshots: {e}", exc_info=True)
         return jsonify({'message': f"Error generating screenshots: {e}"}), 500
     stop = time.time()
     return jsonify({
         'message': "Screenshots created successfully",
-        'screenshots': screenshots,
+        'screenshots': screenshots_urls,
         'execution_time': stop - start
     }), 200
-
-
 
 import logging
 
@@ -65,6 +78,7 @@ def generate_notes():
     data = request.get_json()
     video_path = data.get('video_path')
     options = data.get('options')
+    screenshots= data.get('screenshots')
     if not video_path:
        return jsonify({'message': "No video file path provided"}), 400
 
@@ -86,14 +100,13 @@ def generate_notes():
 
         if options['ocr']:
             logging.debug("OCR is enabled.")
-            screenshots_dir = extract_frames(video_path)
+            screenshots_dir = screenshots
             ocr_result = ocr_from_frames(screenshots_dir)
             formatted_transcription += str(ocr_result)
 
         if options['screenshot']:
             logging.debug("Screenshot generation is enabled.")
-            screenshots_dir = extract_frames(video_path)
-            formatted_transcription += f"\n\nScreenshots:\n{screenshots_dir}"
+            screenshots_dir = screenshots
 
         logging.debug(f"Generated transcription: {formatted_transcription}")
         

@@ -19,6 +19,7 @@ const Home = () => {
     diarization: false
   });
   const [notes, setNotes] = useState('');
+  const [showScreenshotSelector, setShowScreenshotSelector] = useState(false);
 
   const handleFileUpload = (path) => {
     setVideoPath(path);
@@ -29,12 +30,38 @@ const Home = () => {
     setNotes(data.notes);
   };
 
-  const handleOptionChange = (e) => {
-    const { name, checked } = e.target;
-    setOptions((prevOptions) => ({
-      ...prevOptions,
-      [name]: checked
-    }));
+    const handleOptionChange = (e) => {
+        const { name, checked } = e.target;
+
+        if (name === 'diarization' && checked && !options.transcription) {
+            setOptions((prevOptions) => ({
+                ...prevOptions,
+                diarization: false, // Zapobiegaj zaznaczaniu diarization bez transkrypcji
+            }));
+            alert("Transcription must be enabled for diarization."); // Ustaw alert
+            return;
+        }
+
+
+        setOptions((prevOptions) => ({
+            ...prevOptions,
+            [name]: checked
+        }));
+
+        // Update showScreenshotSelector
+        if (name === 'ocr' || name === 'screenshot') {
+            setShowScreenshotSelector(checked);
+        } else {
+          setShowScreenshotSelector(options.ocr || options.screenshot || options.diarization );
+        }
+
+          if(name === 'transcription' && checked === false) {
+            setOptions((prevOptions) => ({
+              ...prevOptions,
+                diarization: false, // Odznacz Diarization jeśli odznaczamy Transcription.
+              }));
+          }
+
   };
 
   return (
@@ -141,7 +168,7 @@ const Home = () => {
                       <Checkbox
                         name="diarization"
                         checked={options.diarization}
-                        onChange={handleOptionChange}
+                         onChange={handleOptionChange}
                         style={{ color: '#403E3B' }}
                       />
                     }
@@ -149,10 +176,11 @@ const Home = () => {
                   />
                 </div>
                 <FileUpload onUpload={handleFileUpload} />
-                <NotesDisplay
-                  videoPath={videoPath}
-                  options={options}
-                  onUpdate={handleNotesUpdate}
+                  <NotesDisplay
+                    videoPath={videoPath}
+                    options={options}
+                    onUpdate={handleNotesUpdate}
+                    showScreenshotSelector = {showScreenshotSelector}
                 />
               </div>
             </div>

@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { uploadVideo } from '../services/api';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
 const FileUpload = ({ onUpload }) => {
@@ -40,8 +43,12 @@ const FileUpload = ({ onUpload }) => {
 
     return (
         <div className="left-panel">
-            <h2>Import Video</h2>
-            <p>Upload a video file from your computer.</p>
+            <Typography variant="h5" gutterBottom>
+                Import Video
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+                Upload a video file from your computer.
+            </Typography>
             <form onSubmit={handleSubmit}>
                 <TextField
                     type="file"
@@ -49,10 +56,17 @@ const FileUpload = ({ onUpload }) => {
                     onChange={handleFileChange}
                     variant="outlined"
                     fullWidth
+                    margin="normal"
                 />
-                <button type="submit" disabled={loading || uploaded} className="btn btn-primary mt-2">
+                <Button
+                    type="submit"
+                    variant="contained"
+                    style={{ backgroundColor: '#403E3B', color: '#fff' }}
+                    disabled={loading || uploaded}
+                    startIcon={loading && <CircularProgress size={20} color="inherit" />}
+                >
                     {loading ? 'Uploading...' : uploaded ? 'File Uploaded' : 'Upload File'}
-                </button>
+                </Button>
             </form>
         </div>
     );
