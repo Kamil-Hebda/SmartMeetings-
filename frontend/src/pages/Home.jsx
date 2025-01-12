@@ -199,6 +199,8 @@ const Home = () => {
         {activeTab === 'AskChat' && <AskModel notes={notes} onPromptChange={handlePromptChange} prompt={prompt} chatResponse={chatResponse} onChatResponseChange={handleChatResponseChange} />}
         {activeTab === 'SendMail' && <div>Send Mail Content</div>}
         {activeTab === 'PlanMeeting' && <div>Plan Meeting Content</div>}
+
+
       </div>
     </div>
   );

@@ -10,6 +10,9 @@ import ScreenshotSelector from './ScreenshotSelector'; // Import ScreenshotSelec
 import FileDownloader from './FileDownloader';
 
 
+import './NotesDisplay.css';
+import EmailSender from './EmailSender';
+
 /**
  * Komponent NotesDisplay:
  * - Odpowiada za generowanie notatek z podanego materiału wideo.
@@ -210,6 +213,14 @@ const NotesDisplay = ({ videoPath, options, onUpdate, showScreenshotSelector, su
                    format={format}
                     onDownload={handleDownload}
                />)}
+
+            </button>
+            {/*
+            {screenshotsDir && <p>Screenshots created in: {screenshotsDir}</p>}
+            {executionTime && <p>Time execution time: {executionTime}</p>}*/}
+            <br />
+            {summary && <EmailSender emailNotes={summary} />}
+            <br />
         </div>
     );
 };

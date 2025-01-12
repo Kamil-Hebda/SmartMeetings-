@@ -8,12 +8,15 @@ import Typography from '@mui/material/Typography';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import FileDownloader from './FileDownloader';
-
+import EmailSender from './EmailSender';
 
 const AskModel = ({ notes, onPromptChange, prompt, chatResponse, onChatResponseChange }) => {
     const [loading, setLoading] = useState(false);
       const [quillRef, setQuillRef] = useState(null)
 
+const AskModel = ({ notes, onPromptChange, prompt, chatResponse, onChatResponseChange }) => {
+    const [loading, setLoading] = useState(false);
+      const [quillRef, setQuillRef] = useState(null)
 
     const handleQuillRefChange = (ref) => {
         if(ref) {
@@ -38,7 +41,6 @@ const AskModel = ({ notes, onPromptChange, prompt, chatResponse, onChatResponseC
       setLoading(false);
     }
   };
-
 
 
   return (
@@ -89,6 +91,7 @@ const AskModel = ({ notes, onPromptChange, prompt, chatResponse, onChatResponseC
         />
          <FileDownloader content={chatResponse} filenamePrefix="chat_notes" htmlContent={quillRef ? quillRef.getEditor().container.innerHTML : null}/>
       </div>
+          {chatResponse && <EmailSender emailNotes={chatResponse} />}
     </div>
   );
 };

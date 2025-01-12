@@ -7,11 +7,23 @@ from backend.services.transcirption_summary import transcribe_video, diarize_aud
 from backend.services.OCR_text_generating import ocr_from_frames
 from urllib.parse import quote
 import re
+import random
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+
+SEND_IN_BLUE_API_KEY = os.getenv("SEND_IN_BLUE_API_KEY")
 routes_bp = Blueprint('routes', __name__)
 
 # Inicjalizacja CORS dla wszystkich tras
 CORS(routes_bp)
+
+verification_codes = {}
+configuration = sib_api_v3_sdk.Configuration()
+configuration.api_key['api-key'] = SEND_IN_BLUE_API_KEY
 
 @routes_bp.route('/', methods=['GET'])
 def index():
@@ -162,4 +174,75 @@ def generate_chat_notes():
         }), 200
     except Exception as e:
         print(f"\n\nError: {e}\n\n")
+        return jsonify({'message': f"Error: {e}"}), 500
+    
+@routes_bp.route('/generate_code', methods=['POST'])
+def generate_code():
+    data = request.json
+    email = data.get('email')
+    
+    if not email:
+        return jsonify({'message': "no adress email provifed"}), 400
+
+    ver_code = random.randint(100000, 999999)
+    verification_codes[email] = ver_code
+    
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+    
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+        to=[{"email": email}],
+        subject="Smart meetings Verification code",
+        html_content=f"Your verification code is: {ver_code}",
+        sender = {"email": "szymongaw853@gmail.com", "name": "Szymon ze Smart Meetings"}
+    )
+        
+    try:
+        api_instance.send_transac_email(send_smtp_email)
+        print(ver_code)
+        return jsonify({'message': "Code sent successfully"}), 200
+    except ApiException as e:
+        return jsonify({'message': f"Error: {e}"}), 500
+    
+@routes_bp.route('/verify_code', methods=['POST'])
+def verify_code():
+    data = request.json
+    email = data.get('email')
+    code = data.get('code')
+    
+    #print('kupa: ', verification_codes[email])
+    
+    try:
+        if not email or not code:
+            return jsonify({'message': 'No email or code provided'}), 400
+        
+        if int(verification_codes[email]) == int(code):
+            return jsonify({'message': 'Code is correct'}), 200
+        else:
+            return jsonify({'message': 'Invalid code'}), 400
+    except Exception as e:
+        print('Error: ', e)
+        return jsonify({'message': 'Invalid code'}), 500
+    
+@routes_bp.route('/send_notes', methods=['POST'])
+def send_notes():
+    data = request.json
+    email = data.get('email')
+    subject = data.get('subject')
+    notes = data.get('notes')
+    
+    if not email:
+        return jsonify({'message': 'No email provided'}), 400
+    
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+        to=[{"email": email}],
+        subject=subject,
+        html_content = f"<html><body>{notes}</body></html>",
+        sender = {"email": "szymongaw853@gmail.com", "name": "Szymon ze Smart Meetings"} 
+    )
+    
+    try:
+        api_instance.send_transac_email(send_smtp_email)
+        return jsonify({'message': 'Notes sent successfully'}), 200
+    except ApiException as e:
         return jsonify({'message': f"Error: {e}"}), 500
