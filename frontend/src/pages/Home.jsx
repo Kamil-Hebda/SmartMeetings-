@@ -11,7 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 const Home = () => {
   const [activeTab, setActiveTab] = useState('Notes');
   const [videoPath, setVideoPath] = useState(null);
-  const [message, setMessage] = useState(null);
+  const [summary, setSummary] = useState('');
   const [options, setOptions] = useState({
     transcription: false,
     ocr: false,
@@ -19,19 +19,22 @@ const Home = () => {
     diarization: false
   });
   const [notes, setNotes] = useState('');
+    const [prompt, setPrompt] = useState('');
+    const [chatResponse, setChatResponse] = useState('');
   const [showScreenshotSelector, setShowScreenshotSelector] = useState(false);
+
 
   const handleFileUpload = (path) => {
     setVideoPath(path);
   };
 
   const handleNotesUpdate = (data) => {
-    setMessage(data.message);
-    setNotes(data.notes);
+      setNotes(data.notes);
+      setSummary(data.notes);
   };
 
     const handleOptionChange = (e) => {
-        const { name, checked } = e.target;
+      const { name, checked } = e.target;
 
         if (name === 'diarization' && checked && !options.transcription) {
             setOptions((prevOptions) => ({
@@ -42,27 +45,33 @@ const Home = () => {
             return;
         }
 
+        setOptions((prevOptions) => {
+            const newOptions =  {
+                ...prevOptions,
+                [name]: checked
+            };
 
-        setOptions((prevOptions) => ({
-            ...prevOptions,
-            [name]: checked
-        }));
+            if (name === 'ocr' || name === 'screenshot') {
+              setShowScreenshotSelector(checked);
+            } else {
+              setShowScreenshotSelector(newOptions.ocr || newOptions.screenshot || newOptions.diarization);
+            }
 
-        // Update showScreenshotSelector
-        if (name === 'ocr' || name === 'screenshot') {
-            setShowScreenshotSelector(checked);
-        } else {
-          setShowScreenshotSelector(options.ocr || options.screenshot || options.diarization );
-        }
-
-          if(name === 'transcription' && checked === false) {
-            setOptions((prevOptions) => ({
-              ...prevOptions,
-                diarization: false, // Odznacz Diarization jeśli odznaczamy Transcription.
-              }));
-          }
+            if(name === 'transcription' && checked === false) {
+                newOptions.diarization = false;
+            }
+              return newOptions;
+          });
 
   };
+     const handlePromptChange = (newPrompt) => {
+        setPrompt(newPrompt);
+    };
+
+     const handleChatResponseChange = (newChatResponse) => {
+        setChatResponse(newChatResponse);
+    }
+
 
   return (
     <div className="container">
@@ -180,13 +189,14 @@ const Home = () => {
                     videoPath={videoPath}
                     options={options}
                     onUpdate={handleNotesUpdate}
-                    showScreenshotSelector = {showScreenshotSelector}
+                     showScreenshotSelector = {showScreenshotSelector}
+                    summary={summary}
                 />
               </div>
             </div>
           </div>
         )}
-        {activeTab === 'AskChat' && <AskModel notes={notes} />}
+        {activeTab === 'AskChat' && <AskModel notes={notes} onPromptChange={handlePromptChange} prompt={prompt} chatResponse={chatResponse} onChatResponseChange={handleChatResponseChange} />}
         {activeTab === 'SendMail' && <div>Send Mail Content</div>}
         {activeTab === 'PlanMeeting' && <div>Plan Meeting Content</div>}
       </div>

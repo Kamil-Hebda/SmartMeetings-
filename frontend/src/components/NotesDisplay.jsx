@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ScreenshotSelector from './ScreenshotSelector'; // Import ScreenshotSelector
+import FileDownloader from './FileDownloader';
+
 
 /**
  * Komponent NotesDisplay:
@@ -16,19 +18,58 @@ import ScreenshotSelector from './ScreenshotSelector'; // Import ScreenshotSelec
  *   2) options: obiekt zawierający zaznaczone przez użytkownika opcje (np. screenshot),
  *   3) onUpdate: funkcję wywoływaną po wygenerowaniu notatek (np. by ustawić wiadomość w komponencie nadrzędnym).
  */
-const NotesDisplay = ({ videoPath, options, onUpdate, showScreenshotSelector }) => {
-    const [summary, setSummary] = useState('');
+const NotesDisplay = ({ videoPath, options, onUpdate, showScreenshotSelector, summary }) => {
     const [loading, setLoading] = useState(false);
     const [screenshots, setScreenshots] = useState([]);
     const [selectedScreenshots, setSelectedScreenshots] = useState([]);
     const [isScreenshotSelectorVisible, setIsScreenshotSelectorVisible] = useState(false);
+     const [quillRef, setQuillRef] = useState(null);
+    const [format, setFormat] = useState('pdf');
+    const [summaryWithBase64Images, setSummaryWithBase64Images] = useState(summary);
+
+    useEffect(() => {
+        setIsScreenshotSelectorVisible(showScreenshotSelector);
+    }, [showScreenshotSelector]);
 
 
     useEffect(() => {
-         setIsScreenshotSelectorVisible(showScreenshotSelector);
-    }, [showScreenshotSelector]);
+    const convertImagesToBase64 = async () => {        
+           const imgRegex = /<img.*?src="(.*?)"/g;
+        let match;
+         let convertedHtml = summary;
 
-     const handleScreenshotSelection = (screenshot) => {
+          while ((match = imgRegex.exec(summary)) !== null) {
+                const imageUrl = match[1];
+                try {
+                    const response = await fetch(imageUrl);
+                   if(response.ok) {
+                       const blob = await response.blob();
+                       const reader = new FileReader();
+
+                         reader.onloadend = () => {
+                           let base64data= reader.result;
+                             convertedHtml=  convertedHtml.replace(imageUrl, base64data);
+                           setSummaryWithBase64Images(convertedHtml);
+                          
+                        };
+
+                           reader.readAsDataURL(blob);
+
+                   }
+                } catch (error) {
+                   console.error('Error loading image:', error);
+               }
+         }
+        setSummaryWithBase64Images(convertedHtml);
+       };
+
+
+        convertImagesToBase64();
+      
+    }, [summary]);
+
+
+    const handleScreenshotSelection = (screenshot) => {
        setSelectedScreenshots((prevSelected) =>
           prevSelected.some(s => s.path === screenshot.path)
              ? prevSelected.filter((s) => s.path !== screenshot.path)
@@ -41,42 +82,46 @@ const NotesDisplay = ({ videoPath, options, onUpdate, showScreenshotSelector }) 
         setIsScreenshotSelectorVisible(false);
         generateNotesWithSelectedScreenshots(selected);
     };
+    const handleQuillRefChange = (ref) => {
+        if(ref) {
+            setQuillRef(ref)
+        }
+    }
 
+   const handleFormatChange = (e) => {
+      setFormat(e.target.value);
+    };
+ const handleDownload = () => {
+        console.log("pobrano")
+    }
 
-    const generateNotesWithSelectedScreenshots = async (selected) => {
+  const generateNotesWithSelectedScreenshots = async (selected) => {
         setLoading(true);
-      try {
-
+    try {
           const selectedScreenshotPaths = selected.map((screenshot) => screenshot.path);
           const notesOptions = {
               ...options,
               screenshots: selectedScreenshotPaths
           };
           const generatedSummary = await generateNotes(videoPath, notesOptions);
-
-              if(options.screenshot) {
-                   let summaryWithImages = generatedSummary.data.notes;
-                  if (selected.length > 0) {
-                      summaryWithImages += '\n\n';
-                     selected.forEach((screenshot) => {
-                          summaryWithImages += `<img src="${screenshot.path}" alt="screenshot" style="max-width: 300px; margin: 5px;"/>`;
-                      });
-                  }
-                   setSummary(summaryWithImages);
-
-              }else {
-                setSummary(generatedSummary.data.notes);
-              }
-
-          onUpdate(generatedSummary.data);
-
+           let summaryWithImages = "";
+          if(generatedSummary.data && generatedSummary.data.notes) {
+            generatedSummary.data.notes.forEach(item => {
+                if (item.text) {
+                    summaryWithImages += item.text + "\n";
+                }
+                if (item.screenshot) {
+                    summaryWithImages += `<img src="${item.screenshot}" alt="screenshot" class="image-in-note" />` + "\n";
+                }
+            });
+           }
+          onUpdate({...generatedSummary.data, notes: summaryWithImages});
       } catch (error) {
           console.error('Error generating notes:', error);
       } finally {
           setLoading(false);
       }
-    };
-
+  };
 
     const handleClick = async () => {
       if (!videoPath) {
@@ -93,8 +138,18 @@ const NotesDisplay = ({ videoPath, options, onUpdate, showScreenshotSelector }) 
            setIsScreenshotSelectorVisible(true);
         } else {
               const generatedSummary = await generateNotes(videoPath, options);
-               setSummary(generatedSummary.data.notes);
-                onUpdate(generatedSummary.data);
+            let summaryWithImages = "";
+           if(generatedSummary.data && generatedSummary.data.notes) {
+             generatedSummary.data.notes.forEach(item => {
+                 if (item.text) {
+                    summaryWithImages +=  item.text + "\n";
+                 }
+                if (item.screenshot) {
+                    summaryWithImages +=  `<img src="${item.screenshot}" alt="screenshot" class="image-in-note" />` + "\n";
+                   }
+            });
+        }
+            onUpdate({...generatedSummary.data, notes: summaryWithImages});
             }
 
       } catch (error) {
@@ -133,10 +188,28 @@ const NotesDisplay = ({ videoPath, options, onUpdate, showScreenshotSelector }) 
             {/* Edytor notatek */}
             <ReactQuill 
                 value={summary} 
-                onChange={setSummary} 
+                onChange={(value) => onUpdate({...options, notes: value})}
                 theme="snow" 
                 style={{ marginTop: '16px', border: '1px solid #ccc', borderRadius: '4px' }}
+                   modules={{
+                        toolbar: [
+                          [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
+                          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                          [{'list': 'ordered'}, {'list': 'bullet'}, 
+                           {'indent': '-1'}, {'indent': '+1'}],
+                          ['link', 'image'],
+                          ['clean']
+                        ],
+                    }}
+                 ref={handleQuillRefChange}
             />
+           {quillRef && (<FileDownloader
+                content={summary}
+                   filenamePrefix="notes"
+                   htmlContent={summaryWithBase64Images}
+                   format={format}
+                    onDownload={handleDownload}
+               />)}
         </div>
     );
 };
@@ -145,7 +218,8 @@ NotesDisplay.propTypes = {
     videoPath: PropTypes.string.isRequired,
     options: PropTypes.object.isRequired,
     onUpdate: PropTypes.func.isRequired,
-  showScreenshotSelector: PropTypes.bool.isRequired,
+    showScreenshotSelector: PropTypes.bool.isRequired,
+    summary: PropTypes.string.isRequired,
 };
 
 export default NotesDisplay;

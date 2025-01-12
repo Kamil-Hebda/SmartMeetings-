@@ -86,3 +86,11 @@ button:hover {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
+
+.image-in-note {
+  width: 80%;
+  margin: 5px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
