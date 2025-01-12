@@ -38,7 +38,7 @@ def convert_mp3_webm_to_wav(input_path, output_path):
     audio.export(output_path, format="wav")
 
 def transcribe_video(video_path, transcription_precision):
-    """Transkrybuje plik audio.
+    """Transkrybuje plik audio i zwraca informację o czasie rozpoczęcia poszczególnych segmentów.
 
     Args:
         video_path (str): Ścieżka do pliku audio.
@@ -53,7 +53,13 @@ def transcribe_video(video_path, transcription_precision):
     try:
         model = whisper.load_model(transcription_precision)
         result = model.transcribe(video_path)
-        return result
+        
+        # Zamieniamy listę segmentów na listę słowników z tekstem i czasem
+        segments_with_time = [
+          {"text": segment['text'], "start": segment['start']} for segment in result.get('segments', [])
+        ]
+        return segments_with_time
+
     except Exception as e:
         raise Exception(str(e))
 
@@ -94,30 +100,29 @@ def format_transcription_with_speakers(transcription_result, diarization_result)
         diarization_result (pyannote.core.Annotation): Wynik diarizacji.
 
     Returns:
-        str: Sformatowana transkrypcja z informacjami o mówcach.
+        list: Sformatowana transkrypcja z informacjami o mówcach.
     """
-    segments = transcription_result.get('segments', [])
-    time_to_transcription = {segment['start']: segment for segment in segments}
+    time_to_transcription = {segment['start']: segment for segment in transcription_result}
     sorted_segments_by_time = sorted(time_to_transcription.keys())
+
     formatted_transcription = []
     current_speaker = None
-    print("darizacja############################################################")
+
     for turn, _, speaker in diarization_result.itertracks(yield_label=True):
         start = turn.start
         end = turn.end
-        segment_text = ""
-        
+        segment_text = []
         for segment_time in sorted_segments_by_time:
             if start <= segment_time <= end:
-                segment_text += time_to_transcription[segment_time]['text']
-    
-        if speaker != current_speaker:
-            formatted_transcription.append(f"\nMówca {speaker}: {segment_text}")
-            current_speaker = speaker
-        else:
-            formatted_transcription.append(f"{segment_text}")
+                segment_text.append(time_to_transcription[segment_time]['text'])
+        if segment_text:
+            formatted_transcription.append({
+                'text': f"Speaker {speaker}: " + " ".join(segment_text),
+                'start': start,
+                'end': end
+            })
 
-    return "".join(formatted_transcription)
+    return formatted_transcription
 
 def summarize(prompt):
     """Generuje streszczenie tekstu.

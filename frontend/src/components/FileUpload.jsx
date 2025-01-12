@@ -1,32 +1,21 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { uploadVideo } from '../services/api';
-import './FileUpload.css';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 
-/**
- * Komponent FileUpload pozwala użytkownikowi wybrać i wgrać plik wideo.
- * - onUpload: funkcja przekazana w propsach, wywoływana po pomyślnym wgraniu pliku
- */
 const FileUpload = ({ onUpload }) => {
-    // Przechowujemy wybrany plik w stanie komponentu
     const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [uploaded, setUploaded] = useState(false);
 
-    /**
-     * handleFileChange:
-     * - Aktualizuje stan 'file' na wybrany przez użytkownika plik (e.target.files[0])
-     */
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
+        setUploaded(false); // Reset uploaded state when a new file is selected
     };
 
-    /**
-     * handleSubmit:
-     * - Zapobiega domyślnemu wysłaniu formularza
-     * - Sprawdza czy wybrano plik
-     * - Tworzy FormData i dołącza wybrany plik
-     * - Za pomocą uploadVideo wysyła dane na serwer
-     * - Jeśli serwer zwróci video_path, wywołuje onUpload z tą ścieżką
-     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!file) {
@@ -37,35 +26,52 @@ const FileUpload = ({ onUpload }) => {
         const formData = new FormData();
         formData.append('video_file', file);
 
+        setLoading(true);
         try {
             const response = await uploadVideo(formData);
             console.log(response);
             if (response.data.video_path) {
                 onUpload(response.data.video_path);
+                setUploaded(true); // Set uploaded state to true after successful upload
             }
         } catch (error) {
             console.error('Error uploading file:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Render formularza umożliwiającego przesłanie pliku wideo
     return (
-        <div className="feature-box">
-            <i className="fas fa-upload fa-3x mb-3"></i>
-            <h4>Import Video</h4>
-            <p>Upload a video file from your computer.</p>
+        <div className="left-panel">
+            <Typography variant="h5" gutterBottom>
+                Import Video
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+                Upload a video file from your computer.
+            </Typography>
             <form onSubmit={handleSubmit}>
-                <input
+                <TextField
                     type="file"
                     name="video_file"
-                    className="form-control"
                     onChange={handleFileChange}
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
                 />
-                <button type="submit" className="btn btn-primary mt-2">Upload File</button>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    style={{ backgroundColor: '#403E3B', color: '#fff' }}
+                    disabled={loading || uploaded}
+                    startIcon={loading && <CircularProgress size={20} color="inherit" />}
+                >
+                    {loading ? 'Uploading...' : uploaded ? 'File Uploaded' : 'Upload File'}
+                </Button>
             </form>
         </div>
     );
 };
+
 FileUpload.propTypes = {
     onUpload: PropTypes.func.isRequired,
 };

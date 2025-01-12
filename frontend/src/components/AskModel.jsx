@@ -1,17 +1,28 @@
-import { useState} from 'react';
-import { generate_chat_notes } from '../services/api';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { generate_chat_notes } from '../services/api';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import FileDownloader from './FileDownloader';
 import EmailSender from './EmailSender';
-import DownloadChatNotes from './DownloadNotes';
 
-// const CONVERT_KEY = process.env.CONVERT_API_KEY;
-// let convertApi = ConvertApi.auth(CONVERT_KEY)
-// console.log(CONVERT_KEY)
+const AskModel = ({ notes, onPromptChange, prompt, chatResponse, onChatResponseChange }) => {
+    const [loading, setLoading] = useState(false);
+      const [quillRef, setQuillRef] = useState(null)
 
-const AskModel = ({ notes, prompt }) => {
-  const [chatResponse, setChatResponse] = useState('');
-  const [loading, setLoading] = useState(false);
+const AskModel = ({ notes, onPromptChange, prompt, chatResponse, onChatResponseChange }) => {
+    const [loading, setLoading] = useState(false);
+      const [quillRef, setQuillRef] = useState(null)
 
+    const handleQuillRefChange = (ref) => {
+        if(ref) {
+            setQuillRef(ref)
+        }
+    }
   // Funkcja do wysyłania zapytania do chatu
   const handleAsk = async () => {
     if (!notes) {
@@ -21,60 +32,77 @@ const AskModel = ({ notes, prompt }) => {
 
     setLoading(true);
     try {
-      // Wyślij zapytanie do serwera
-       const response = await generate_chat_notes({
-        text: notes, // Transkrypcja jako tekst
-        prompt: prompt, // Użytkownik wpisuje prompt
-    });
-       
-      // Otrzymana odpowiedź
-      setChatResponse(response.data.notes);
+      const response = await generate_chat_notes(notes, prompt);
+        onChatResponseChange(response.data.notes);
     } catch (error) {
       console.error("Błąd podczas zapytania do chatu:", error.response ? error.response.data : error.message);
-      setChatResponse("Wystąpił błąd. Spróbuj ponownie.");
+        onChatResponseChange("Wystąpił błąd. Spróbuj ponownie.");
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div>
-      {/* Warunek blokujący input jeśli brak transkrypcji */}
-      <div>
-        {!notes ? (
-          <p>Transkrypcja nie jest dostępna. Proszę poczekać...</p>
-        ) : (
-          <div>
-            {/*<textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Wpisz swoje zapytanie..."
-              disabled={loading} // Disable input while loading
-            />*/}
-            <button onClick={handleAsk} disabled={loading || !prompt}>
-              {loading ? 'Wysyłanie...' : 'Wyślij zapytanie'}
-            </button>
-          </div>
-        )}
-      </div>
 
-      {/* Wyświetlanie odpowiedzi od modelu */}
-      {chatResponse && (
-        <div>
-          <h3>Odpowiedź modelu:</h3>
-          <p>{chatResponse}</p>
+  return (
+    <div className="left-panel">
+      <div className="feature-box">
+        <h2>Prompt for Chat</h2>
+        {!notes && <p>Transkrypcja nie jest dostępna. Proszę poczekać na jej wygenerowanie, aby wpisać prompt.</p>}
+        <TextField
+          id="outlined-multiline-flexible"
+          label="Prompt"
+          multiline
+          maxRows={4}
+          placeholder="Enter your prompt here..."
+          value={prompt}
+          onChange={(e) => onPromptChange(e.target.value)}
+          className="prompt-box"
+          disabled={!notes}
+          variant="outlined"
+          fullWidth
+        />
+        <Button 
+                variant="contained" 
+                style={{ backgroundColor: '#403E3B', color: '#fff', marginTop: '10px' }}
+                onClick={handleAsk} 
+                disabled={loading}
+                startIcon={loading && <CircularProgress size={20} color='#403E3B' />}
+            >
+                {loading ? 'Generating...' : 'Generate Chat Response'}
+            </Button>
+
+
+        <ReactQuill 
+          value={chatResponse} 
+          onChange={onChatResponseChange}
+          theme="snow" 
+          style={{ marginTop: '16px', border: '1px solid #ccc', borderRadius: '4px' }}
+           modules={{
+                toolbar: [
+                  [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
+                  ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                  [{'list': 'ordered'}, {'list': 'bullet'}, 
+                   {'indent': '-1'}, {'indent': '+1'}],
+                  ['link', 'image'],
+                  ['clean']
+                ],
+                }}
+                ref={handleQuillRefChange}
+        />
+         <FileDownloader content={chatResponse} filenamePrefix="chat_notes" htmlContent={quillRef ? quillRef.getEditor().container.innerHTML : null}/>
+      </div>
           {chatResponse && <EmailSender emailNotes={chatResponse} />}
-          <br />
-          <br />
-          {chatResponse && <DownloadChatNotes downloadedNote={chatResponse} />}
-        </div>
-      )}
     </div>
   );
 };
+
 AskModel.propTypes = {
-  notes: PropTypes.string,
-  prompt: PropTypes.string,
+    notes: PropTypes.string,
+  onPromptChange: PropTypes.func.isRequired,
+  prompt: PropTypes.string.isRequired,
+  chatResponse: PropTypes.string.isRequired,
+  onChatResponseChange: PropTypes.func.isRequired,
 };
+
 
 export default AskModel;

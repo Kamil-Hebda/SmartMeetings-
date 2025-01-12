@@ -18,6 +18,7 @@ export const generateNotes = async (videoPath, options) => {
   return await api.post('/generate_notes', {
       video_path: videoPath,
       options: options,
+      screenshots: options.screenshots,
     });
 };
 
@@ -27,3 +28,9 @@ export const generate_chat_notes = async (text, prompt) => {
     prompt: prompt,
   });
 }
+
+export const generateScreenshots = async (videoPath) => {
+  return await api.post('/generate_screenshots', {
+    video_path: videoPath,
+  });
+};

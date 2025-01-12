@@ -2,6 +2,8 @@ import cv2
 import os
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor
+from urllib.parse import quote  # Import funkcji quote
+import shutil
 
 
 def extract_frames(video_path, frame_rate=1):
@@ -43,6 +45,8 @@ def extract_frames(video_path, frame_rate=1):
     cap.release()
     executor.shutdown()
 
+    return ss_dir
+
 
 def format_time(seconds):
     minutes = int(seconds // 60)
@@ -59,12 +63,20 @@ def is_significant_change(frame1, frame2, threshold=18000000):
 
 
 def mkdir_for_lecture(video_name):
-    new_dir = 'screenshots/' + video_name.split('.')[0]
+    base_dir = 'static/screenshots/'
+    new_dir_name = video_name.split('.')[0].replace(" ", "_")
+    new_dir = os.path.join(base_dir, new_dir_name)
+    
+    # Usuń stary folder, jeśli istnieje
+    old_dir_name_with_space = video_name.split('.')[0]
+    old_dir_with_space = os.path.join(base_dir, old_dir_name_with_space)
+    
+    if os.path.exists(old_dir_with_space):
+        shutil.rmtree(old_dir_with_space)
+
     os.makedirs(new_dir, exist_ok=True)
     return new_dir
 
 
 def save_frame_async(path, frame):
     cv2.imwrite(path, frame)
-
-

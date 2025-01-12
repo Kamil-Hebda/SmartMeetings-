@@ -2,76 +2,95 @@ body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: #F2E9D8; /* Jasny beżowy jako tło główne */
+  color: #0D0D0D; /* Czarny jako kolor tekstu */
 }
 
 h1, h2 {
-  color: #007bff;
+  color: #0D0D0D; /* Czarny */
   margin-bottom: 20px;
   text-align: center;
 }
 
-h2{
-margin-top: 20px;
-}
-
 .container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-p {
-  margin-bottom: 10px;
-  text-align: center;
+  max-width: 60%;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #FFFFFF; /* Biały dla kontrastu */
+  border-radius: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  padding-bottom: 30px;
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 1px solid #403E3B; /* Ciemny kolor obramowania */
+  border-bottom: none;
+  background-color: #595856; /* Ciemnoszary dla zakładek nieaktywnych */
+  color: #FFFFFF; /* Biały tekst */
 }
 
-.col-md-4 {
-  width: 30%;
-  padding: 10px;
-}
-.col-md-8 {
-  width: 60%;
-  padding: 10px;
+.tab.active {
+  background-color: #F2E9D8; /* Jasny beżowy dla aktywnej zakładki */
+  font-weight: bold;
 }
 
-.feature-box {
+.tab-content {
   padding: 15px;
+  background-color: #BFB3A4; /* Jasny szary/brązowy jako tło treści */
+  border: 1px solid #403E3B; /* Ciemny obramowanie */
+  color: #0D0D0D; /* Czarny tekst */
+  border-radius: 30px;
+  border-top-left-radius: 0; /* Brak zagięcia w lewym górnym rogu */
+}
+
+.tab-buttons {
+  display: inline-block;
+  border: 1px solid #403E3B; /* Ciemny obramowanie */
+  /*border-radius: 4px;*/
+  color: #FFFFFF; /* Biały tekst */
+  cursor: pointer;
   text-align: center;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  margin: 10px;
+  text-decoration: none;
+  transition: background-color 0.3s, border-color 0.3s;
+  border-bottom: 0;
+
+}
+.tab-button{
+  border-bottom: 0;
+  border-bottom-left-radius: 0 ;
+  border-bottom-right-radius: 0 ;
 }
 
-
-textarea {
-  width: 100%;
-  padding: 10px;
+button {
+  display: inline-block;
+  padding: 12px 24px;
+  margin-top: 10px;
   margin-bottom: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #403E3B; /* Ciemny obramowanie */
   border-radius: 4px;
-  min-height: 100px;
+  background-color: #403E3B; /* Ciemny kolor przycisku */
+  color: #FFFFFF; /* Biały tekst */
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s, border-color 0.3s;
 }
-.options {
- display: flex;
- flex-direction: column;
-  align-items: center;
-  margin-bottom: 10px;
+
+button:hover {
+  background-color: #595856; /* Ciemnoszary na hover */
+  border-color: #595856;
 }
-.options > label{
-    padding: 5px;
-    margin-bottom: 5px;
+
+.page-button {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }
-form > button, div > button {
-width: 200px;
+
+.image-in-note {
+  width: 80%;
+  margin: 5px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
