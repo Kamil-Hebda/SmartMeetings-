@@ -1,3 +1,4 @@
+import json
 import os
 import time
 from flask import Flask, Blueprint, request, jsonify, current_app
@@ -12,6 +13,7 @@ import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 from dotenv import load_dotenv
 import os
+import base64
 
 load_dotenv()
 
@@ -119,13 +121,13 @@ def generate_notes():
                 diarization_result = diarize_audio(video_path)
                 transcriptions = format_transcription_with_speakers(transcription_result, diarization_result)
                 for trans in transcriptions:
-                     if isinstance(trans, dict) and 'start' in trans:
+                    if isinstance(trans, dict) and 'start' in trans:
                         formatted_transcription.append({"text": trans['text'], "time": trans['start']})
-                     else:
+                    else:
                         formatted_transcription.append({"text": str(trans), "time": 0})
             else:
-                 for trans in transcription_result:
-                   formatted_transcription.append({"text": trans['text'], "time": trans['start']})
+                for trans in transcription_result:
+                    formatted_transcription.append({"text": trans['text'], "time": trans['start']})
         
         if options['ocr'] and screenshots:
             logging.debug("OCR is enabled.")
@@ -142,8 +144,8 @@ def generate_notes():
 
 
         if options['screenshot'] and screenshots:
-           logging.debug("Screenshot generation is enabled.")
-           for screenshot in screenshots:
+            logging.debug("Screenshot generation is enabled.")
+            for screenshot in screenshots:
                 time = extract_time_from_filename(screenshot)
                 formatted_transcription.append({"text": '', "time": time, "screenshot": screenshot})
         
@@ -180,12 +182,11 @@ def generate_chat_notes():
     
 @routes_bp.route('/generate_code', methods=['POST'])
 def generate_code():
-    data = request.get_json()
+    data = request.json
     email = data.get('email')
-    print(f"email: {email}")
+    
     if not email:
-            return jsonify({'message': "No email address provided"}), 400
-
+        return jsonify({'message': "no adress email provifed"}), 400
     ver_code = random.randint(100000, 999999)
     verification_codes[email] = ver_code
     
@@ -195,22 +196,19 @@ def generate_code():
         to=[{"email": email}],
         subject="Smart meetings Verification code",
         html_content=f"Your verification code is: {ver_code}",
-        sender = {"email": "kamilhebda28@gmail.com", "name": "Kamil ze Smart Meetings"}
+        sender = {"email": "szymongaw853@gmail.com", "name": "Szymon ze Smart Meetings"}
     )
         
     try:
-         print("przed api_instance")
-         api_response = api_instance.send_transac_email(send_smtp_email)
-         print(f"email sent {api_response}")
-         return jsonify({'message': "Code sent successfully"}), 200
+        api_instance.send_transac_email(send_smtp_email)
+        print(ver_code)
+        return jsonify({'message': "Code sent successfully"}), 200
     except ApiException as e:
-        print(f"Exception when calling TransactionalEmailsApi->send_transac_email: {e}")
         return jsonify({'message': f"Error: {e}"}), 500
-
-
+    
 @routes_bp.route('/verify_code', methods=['POST'])
 def verify_code():
-    data = request.get_json()
+    data = request.json
     email = data.get('email')
     code = data.get('code')
     
@@ -220,7 +218,7 @@ def verify_code():
         if not email or not code:
             return jsonify({'message': 'No email or code provided'}), 400
         
-        if int(verification_codes.get(email)) == int(code):
+        if int(verification_codes[email]) == int(code):
             return jsonify({'message': 'Code is correct'}), 200
         else:
             return jsonify({'message': 'Invalid code'}), 400
@@ -228,27 +226,71 @@ def verify_code():
         print('Error: ', e)
         return jsonify({'message': 'Invalid code'}), 500
     
+@routes_bp.route('/mail_reciever', methods=['POST'])
+def mail_reciever():
+    try:
+        data = request.json
+        print(data)
+        return jsonify({'message': 'Mails recieved'}), 200
+    except Exception as e:
+        print('Error: ', e)
+        return jsonify({'message': 'Mails not recieved'}), 500
+    
 @routes_bp.route('/send_notes', methods=['POST'])
 def send_notes():
-    data = request.get_json()
-    email = data.get('email')
-    subject = data.get('subject')
-    notes = data.get('notes')
+    files = request.files.getlist('files')
+    recievers = request.form.get('reciever')
+    subject = request.form.get('subject')
+    notes = request.form.get('notes')
     
-    if not email:
-        return jsonify({'message': 'No email provided'}), 400
+    if not recievers:
+        return jsonify({'message': 'No emails provided'}), 400
+    
+    recievers = json.loads(recievers)
+    
+    attachments = []
+    
+    for file in files:
+        encoded_content = base64.b64encode(file.read()).decode('utf-8')
+        attachments.append({
+            "content": encoded_content,
+            "name": file.filename,
+            "content_type": file.content_type
+        })
+    
+    to_emails = [{"email": email['email']} for email in recievers]
+    print('\n\n\n\n\nkupaaa')
+    print(to_emails)
+    
+    html_contet = f"<html><body>{notes}</body></html>"
+    
+    print(f"Files received: {files}")
+    print(f"Attachments: {attachments}")
     
     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
-        to=[{"email": email}],
-        subject=subject,
-        html_content = f"<html><body>{notes}</body></html>",
-        sender = {"email": "kamilhebda28@gmail.com", "name": "Kamil ze Smart Meetings"} 
-    )
     
+    if (len(attachments) > 0):
+        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+            to=to_emails,
+            subject=subject,
+            html_content = html_contet,
+            sender = {"email": "szymongaw853@gmail.com", "name": "Szymon ze Smart Meetings"},
+            attachment=attachments
+        )
+    else:
+            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+            to=to_emails,
+            subject=subject,
+            html_content = html_contet,
+            sender = {"email": "szymongaw853@gmail.com", "name": "Szymon ze Smart Meetings"},
+        )
+        
+        
     try:
         api_instance.send_transac_email(send_smtp_email)
         return jsonify({'message': 'Notes sent successfully'}), 200
     except ApiException as e:
+        print('\n\n\n')
+        print(e)
         return jsonify({'message': f"Error: {e}"}), 500
     

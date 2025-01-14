@@ -20,8 +20,8 @@ const Home = () => {
     diarization: false
   });
   const [notes, setNotes] = useState('');
-    const [prompt, setPrompt] = useState('');
-    const [chatResponse, setChatResponse] = useState('');
+  const [prompt, setPrompt] = useState('');
+  const [chatResponse, setChatResponse] = useState('');
   const [showScreenshotSelector, setShowScreenshotSelector] = useState(false);
 
 
@@ -65,11 +65,11 @@ const Home = () => {
           });
 
   };
-     const handlePromptChange = (newPrompt) => {
+    const handlePromptChange = (newPrompt) => {
         setPrompt(newPrompt);
     };
 
-     const handleChatResponseChange = (newChatResponse) => {
+    const handleChatResponseChange = (newChatResponse) => {
         setChatResponse(newChatResponse);
     }
 
@@ -95,7 +95,7 @@ const Home = () => {
           borderBottomLeftRadius: 0,
           borderBottom: 0,
           borderColor: '#403E3B',
-           }}
+          }}
         >
           Notes
         </Button>
@@ -104,7 +104,7 @@ const Home = () => {
           onClick={() => setActiveTab('AskChat')} 
           style={{ backgroundColor: activeTab === 'AskChat' ? '#BFB3A4' : '#403E3B',
             borderColor: '#403E3B',
-           }}
+          }}
         >
           Ask Chat
         </Button>
@@ -113,7 +113,7 @@ const Home = () => {
           onClick={() => setActiveTab('SendMail')} 
           style={{ backgroundColor: activeTab === 'SendMail' ? '#BFB3A4' : '#403E3B',
             borderColor: '#403E3B',
-           }}
+          }}
         >
           Send Mail
         </Button>
@@ -124,7 +124,7 @@ const Home = () => {
           borderBottomRightRadius: 0,
           borderBottom: 0,
           borderColor: '#403E3B',
-           }}
+          }}
         >
           Plan Meeting
         </Button>
@@ -178,7 +178,7 @@ const Home = () => {
                       <Checkbox
                         name="diarization"
                         checked={options.diarization}
-                         onChange={handleOptionChange}
+                        onChange={handleOptionChange}
                         style={{ color: '#403E3B' }}
                       />
                     }
@@ -190,7 +190,7 @@ const Home = () => {
                     videoPath={videoPath}
                     options={options}
                     onUpdate={handleNotesUpdate}
-                     showScreenshotSelector = {showScreenshotSelector}
+                    showScreenshotSelector = {showScreenshotSelector}
                     summary={summary}
                 />
               </div>
@@ -198,7 +198,7 @@ const Home = () => {
           </div>
         )}
         {activeTab === 'AskChat' && <AskModel notes={notes} onPromptChange={handlePromptChange} prompt={prompt} chatResponse={chatResponse} onChatResponseChange={handleChatResponseChange} />}
-        {activeTab === 'SendMail' && <EmailSender />}
+        {activeTab === 'SendMail' && <EmailSender emailNotes={{summary, chatResponse}}/>}
         {activeTab === 'PlanMeeting' && <div>Plan Meeting Content</div>}
 
 

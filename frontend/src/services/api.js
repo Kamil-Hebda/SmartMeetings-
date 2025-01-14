@@ -48,12 +48,18 @@ export const verifyCode = async (email, code) => {
   });
 };
 
-export const sendNotes = async (email, subject, notes) => {
-  return await api.post('/send_notes', {
-    email: email,
-    subject: subject,
-    notes: notes,
-  });
-};
+// export const mailReciever = async (email) => {
+//   return await api.post('/mail_reciever', {
+//     email: email,
+//   })
+// }
+
+// export const sendNotes = async (email, subject, notes) => {
+//   return await api.post('/send_notes', {
+//     email: email,
+//     subject: subject,
+//     notes: notes,
+//   });
+// };
 
 export default api;
