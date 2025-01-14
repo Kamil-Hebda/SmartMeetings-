@@ -6,6 +6,7 @@ from flask_cors import CORS
 from backend.services.ss_generating import extract_frames
 from backend.services.transcirption_summary import transcribe_video, diarize_audio, format_transcription_with_speakers, summarize
 from backend.services.OCR_text_generating import ocr_from_frames
+from backend.services.calendar.calendar_integration import *
 from urllib.parse import quote
 import re
 import random
