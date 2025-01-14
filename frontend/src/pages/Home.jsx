@@ -8,6 +8,9 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import EmailSender from '../components/EmailSender';
+import AddEvent from '../components/AddEvent';
+import EventCalendar from '../components/EventCalendar';
+
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState('Notes');
@@ -20,6 +23,7 @@ const Home = () => {
     diarization: false
   });
   const [notes, setNotes] = useState('');
+  const [activeSubTab, setActiveSubTab] = useState('Calendar');
   const [prompt, setPrompt] = useState('');
   const [chatResponse, setChatResponse] = useState('');
   const [showScreenshotSelector, setShowScreenshotSelector] = useState(false);
@@ -30,39 +34,39 @@ const Home = () => {
   };
 
   const handleNotesUpdate = (data) => {
-      setNotes(data.notes);
-      setSummary(data.notes);
+    setNotes(data.notes);
+    setSummary(data.notes);
   };
 
-    const handleOptionChange = (e) => {
-      const { name, checked } = e.target;
+  const handleOptionChange = (e) => {
+    const { name, checked } = e.target;
 
-        if (name === 'diarization' && checked && !options.transcription) {
-            setOptions((prevOptions) => ({
-                ...prevOptions,
+    if (name === 'diarization' && checked && !options.transcription) {
+      setOptions((prevOptions) => ({
+        ...prevOptions,
                 diarization: false, // Zapobiegaj zaznaczaniu diarization bez transkrypcji
-            }));
+      }));
             alert("Transcription must be enabled for diarization."); // Ustaw alert
-            return;
-        }
+      return;
+    }
 
-        setOptions((prevOptions) => {
-            const newOptions =  {
-                ...prevOptions,
+    setOptions((prevOptions) => {
+      const newOptions = {
+        ...prevOptions,
                 [name]: checked
-            };
+      };
 
-            if (name === 'ocr' || name === 'screenshot') {
-              setShowScreenshotSelector(checked);
-            } else {
-              setShowScreenshotSelector(newOptions.ocr || newOptions.screenshot || newOptions.diarization);
-            }
+      if (name === 'ocr' || name === 'screenshot') {
+        setShowScreenshotSelector(checked);
+      } else {
+        setShowScreenshotSelector(newOptions.ocr || newOptions.screenshot || newOptions.diarization);
+      }
 
-            if(name === 'transcription' && checked === false) {
-                newOptions.diarization = false;
-            }
-              return newOptions;
-          });
+      if (name === 'transcription' && checked === false) {
+        newOptions.diarization = false;
+      }
+      return newOptions;
+    });
 
   };
     const handlePromptChange = (newPrompt) => {
@@ -76,54 +80,54 @@ const Home = () => {
 
   return (
     <div className="container">
-      <h1>Smart Meetings</h1>      
-      <ButtonGroup 
-        variant="contained" 
-        aria-label="contained primary button group" 
+      <h1>Smart Meetings</h1>
+      <ButtonGroup
+        variant="contained"
+        aria-label="contained primary button group"
         className="tab-buttons"
-        style={{ 
+        style={{
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
           border: 0,
           boxShadow: 'none',
          }} // Remove border radius
       >
-        <Button 
+        <Button
           className='tab-button'
-          onClick={() => setActiveTab('Notes')} 
+          onClick={() => setActiveTab('Notes')}
           style={{ backgroundColor: activeTab === 'Notes' ? '#BFB3A4' : '#403E3B',
-          borderBottomLeftRadius: 0,
-          borderBottom: 0,
-          borderColor: '#403E3B',
+            borderBottomLeftRadius: 0,
+            borderBottom: 0,
+            borderColor: '#403E3B',
           }}
         >
           Notes
         </Button>
-        <Button 
+        <Button
           className='tab-button'
-          onClick={() => setActiveTab('AskChat')} 
-          style={{ backgroundColor: activeTab === 'AskChat' ? '#BFB3A4' : '#403E3B',
+          onClick={() => setActiveTab('AskChat')}
+          style={{backgroundColor: activeTab === 'AskChat' ? '#BFB3A4' : '#403E3B',
             borderColor: '#403E3B',
           }}
         >
           Ask Chat
         </Button>
-        <Button 
+        <Button
           className='tab-button'
-          onClick={() => setActiveTab('SendMail')} 
+          onClick={() => setActiveTab('SendMail')}
           style={{ backgroundColor: activeTab === 'SendMail' ? '#BFB3A4' : '#403E3B',
             borderColor: '#403E3B',
           }}
         >
           Send Mail
         </Button>
-        <Button 
+        <Button
           className='tab-button'
-          onClick={() => setActiveTab('PlanMeeting')} 
+          onClick={() => setActiveTab('PlanMeeting')}
           style={{ backgroundColor: activeTab === 'PlanMeeting' ? '#BFB3A4' : '#403E3B',
-          borderBottomRightRadius: 0,
-          borderBottom: 0,
-          borderColor: '#403E3B',
+            borderBottomRightRadius: 0,
+            borderBottom: 0,
+            borderColor: '#403E3B',
           }}
         >
           Plan Meeting
@@ -199,9 +203,35 @@ const Home = () => {
         )}
         {activeTab === 'AskChat' && <AskModel notes={notes} onPromptChange={handlePromptChange} prompt={prompt} chatResponse={chatResponse} onChatResponseChange={handleChatResponseChange} />}
         {activeTab === 'SendMail' && <EmailSender emailNotes={{summary, chatResponse}}/>}
-        {activeTab === 'PlanMeeting' && <div>Plan Meeting Content</div>}
-
-
+        {activeTab === 'PlanMeeting' && (
+          <div>
+            <ButtonGroup
+              variant="contained"
+              aria-label="contained primary button group"
+              style={{
+                marginBottom: '15px',
+              }}
+            ><Button
+                onClick={() => setActiveSubTab('Calendar')}
+                style={{
+                  backgroundColor: activeSubTab === 'Calendar' ? '#BFB3A4' : '#403E3B',
+                }}
+              >
+                Kalendarz z Wydarzeniami
+              </Button>
+              <Button
+                onClick={() => setActiveSubTab('AddEvent')}
+                style={{
+                  backgroundColor: activeSubTab === 'AddEvent' ? '#BFB3A4' : '#403E3B',
+                }}
+              >
+                Dodaj Wydarzenie
+              </Button>
+            </ButtonGroup>
+              {activeSubTab === 'Calendar' && <EventCalendar />}
+              {activeSubTab === 'AddEvent' && <AddEvent />}
+          </div>
+        )}
       </div>
     </div>
   );

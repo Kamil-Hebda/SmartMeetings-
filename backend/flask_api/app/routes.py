@@ -184,7 +184,7 @@ def generate_chat_notes():
 def generate_code():
     data = request.json
     email = data.get('email')
-    
+
     if not email:
         return jsonify({'message': "no adress email provifed"}), 400
     ver_code = random.randint(100000, 999999)
@@ -205,7 +205,7 @@ def generate_code():
         return jsonify({'message': "Code sent successfully"}), 200
     except ApiException as e:
         return jsonify({'message': f"Error: {e}"}), 500
-    
+
 @routes_bp.route('/verify_code', methods=['POST'])
 def verify_code():
     data = request.json
@@ -235,21 +235,21 @@ def mail_reciever():
     except Exception as e:
         print('Error: ', e)
         return jsonify({'message': 'Mails not recieved'}), 500
-    
+
 @routes_bp.route('/send_notes', methods=['POST'])
 def send_notes():
     files = request.files.getlist('files')
     recievers = request.form.get('reciever')
     subject = request.form.get('subject')
     notes = request.form.get('notes')
-    
+
     if not recievers:
         return jsonify({'message': 'No emails provided'}), 400
-    
+
     recievers = json.loads(recievers)
-    
+
     attachments = []
-    
+
     for file in files:
         encoded_content = base64.b64encode(file.read()).decode('utf-8')
         attachments.append({
@@ -261,14 +261,14 @@ def send_notes():
     to_emails = [{"email": email['email']} for email in recievers]
     print('\n\n\n\n\nkupaaa')
     print(to_emails)
-    
+
     html_contet = f"<html><body>{notes}</body></html>"
-    
+
     print(f"Files received: {files}")
     print(f"Attachments: {attachments}")
     
     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-    
+
     if (len(attachments) > 0):
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
             to=to_emails,
@@ -284,8 +284,8 @@ def send_notes():
             html_content = html_contet,
             sender = {"email": "szymongaw853@gmail.com", "name": "Szymon ze Smart Meetings"},
         )
-        
-        
+
+
     try:
         api_instance.send_transac_email(send_smtp_email)
         return jsonify({'message': 'Notes sent successfully'}), 200
@@ -293,4 +293,67 @@ def send_notes():
         print('\n\n\n')
         print(e)
         return jsonify({'message': f"Error: {e}"}), 500
-    
+
+
+@routes_bp.route('/list_events', methods=['GET'])
+def list_events_route():
+    try:
+        service = authenticate_google_calendar()
+        if not service:
+            return jsonify({"error": "Google Calendar authentication failed"}), 500
+
+        events = list_events(service)
+        if not events:
+            return jsonify({"message": "No upcoming events found"}), 200
+
+        return jsonify({"events": events}), 200
+
+    except Exception as e:
+        logging.error(f"Error in /list_events: {str(e)}", exc_info=True)
+        return jsonify({"error": str(e)}), 500
+
+
+
+@routes_bp.route('/create_event', methods=['POST'])
+def create_event():
+    try:
+        data = request.json
+        summary = data.get('summary')
+        location = data.get('location')
+        description = data.get('description')
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+        attendees = data.get('attendees', [])
+        reminders = data.get('reminders', {"useDefault": True})
+
+        if not summary or not start_date or not end_date:
+            return jsonify({'error': 'Missing required fields: summary, start_date, or end_date'}), 400
+
+        if not isinstance(start_date, dict) or not isinstance(end_date, dict):
+            return jsonify({'error': 'Invalid date format for start_date or end_date. Expecting a dictionary with "dateTime" and "timeZone".'}), 400
+
+        service = authenticate_google_calendar()
+        if not service:
+            return jsonify({'error': 'Google Calendar authentication failed'}), 500
+
+        event_data = prepare_event_data(
+            summary=summary,
+            location=location,
+            description=description,
+            start_date=start_date,
+            end_date=end_date,
+            attendees=attendees,
+            reminders=reminders,
+        )
+
+        event_link = add_event(service, event_data)
+        if event_link:
+            return jsonify({'message': 'Event created successfully', 'event_link': event_link}), 200
+        else:
+            return jsonify({'error': 'Failed to create event'}), 500
+
+    except Exception as e:
+        logging.error(f"Error creating event: {e}")
+        return jsonify({'error': 'An error occurred while creating the event'}), 500
+
+

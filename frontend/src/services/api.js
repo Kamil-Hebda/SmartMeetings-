@@ -62,4 +62,21 @@ export const verifyCode = async (email, code) => {
 //   });
 // };
 
+export const createEvent = async (summary, location, description, start_date, end_date, attendees, reminders) => {
+  return await api.post('/create_event', {
+    summary: summary,
+    location: location,
+    description: description,
+    start_date: start_date,
+    end_date: end_date,
+    attendees: attendees,
+    reminders: reminders,
+  });
+};
+
+export const listEvents = async () => {
+  return await api.get('/list_events');
+};
+
+
 export default api;
