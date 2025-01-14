@@ -46,7 +46,7 @@ const init = async () => {
   };
 
    generateNotesButton.addEventListener('click', function() {
-        const notesService = 'http://localhost:8080/';
+        const notesService = 'http://localhost:5173/';
         window.open(notesService, '_blank');
     });
 
