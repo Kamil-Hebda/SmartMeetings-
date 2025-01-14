@@ -73,7 +73,7 @@ numba==0.60.0
 numpy==1.26.4
 oauthlib==3.2.2
 omegaconf==2.3.0
-openai-whisper==20240930
+openai-whisper @ git+https://github.com/openai/whisper.git@90db0de1896c23cbfaf0c58bc2d30665f709f170
 opencv-python==4.10.0.84
 optuna==4.1.0
 packaging==24.2
