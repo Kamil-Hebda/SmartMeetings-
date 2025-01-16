@@ -17,14 +17,19 @@ const EmailSender = ({ emailNotes }) => {
     const [file, setFile] = useState([]);
     const [input, setInput] = useState('');
     const [notes, setNotes] = useState('');
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(() => {
+        return Number(sessionStorage.getItem('step')) || 1;
+    });
     const [loading, setLoading] = useState(false);
 
+    const setNewStepValue = () => {
+        sessionStorage.setItem('step', 3);
+    };
+
     const generateCode = async () => {
-        setLoading(true);
         try {
             const result = await api.post('/generate_code', { email });
-            if(result.status === 200) {
+            if (result.status === 200) {
                 alert(result.data.message);
                 setStep(2);
             }
@@ -43,6 +48,7 @@ const EmailSender = ({ emailNotes }) => {
             if(result.status === 200) {
                 alert('Kod weryfikacyjny poprawny, do kogo powinniśny wysłać notatki');
                 setReciever(prevRecievers => [...prevRecievers, email])
+                setNewStepValue();
                 setStep(3);
             }
         } catch (error) {
