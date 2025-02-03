@@ -13,14 +13,14 @@ def ocr_from_frames(frames):
   
     genai.configure(api_key=GOOGLE_API_KEY)
 
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-2.0-flash-exp')
 
     all_text = []
     for i, image_path in enumerate(frames):
         base64_image = encode_image(image_path)
 
         contents = [
-            f"Przepisz sam tekst z obrazka, klatka {i + 1}. Po polsku:",
+            f"Przepisz sam tekst z obrazka który jest częścią udostępnianej prezentacji, klatka {i + 1}. Zwróć mi to w formacie html i masz zwracać tylko to co zawiera zdjęcie bez zbędnych komentarzy :",
             {
                 "mime_type": "image/jpeg",
                 "data": base64.b64decode(base64_image)

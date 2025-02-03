@@ -63,8 +63,12 @@ def is_significant_change(frame1, frame2, threshold=18000000):
 
 
 def mkdir_for_lecture(video_name):
+<<<<<<< HEAD
     base_dir = 'static/screenshots/'# lub / przed
 
+=======
+    base_dir = 'static/screenshots/'
+>>>>>>> 8adebb0 (Add NoteDisplay styles, update screenshot directory, and enhance OCR model prompt)
     new_dir_name = video_name.split('.')[0].replace(" ", "_")
     new_dir = os.path.join(base_dir, new_dir_name)
     
