@@ -63,7 +63,7 @@ def is_significant_change(frame1, frame2, threshold=18000000):
 
 
 def mkdir_for_lecture(video_name):
-    base_dir = 'backend/flask_api/static/screenshots/'
+    base_dir = 'static/screenshots/'
     new_dir_name = video_name.split('.')[0].replace(" ", "_")
     new_dir = os.path.join(base_dir, new_dir_name)
     
