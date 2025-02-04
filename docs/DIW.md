@@ -339,7 +339,7 @@ Architektura systemu z punktu widzenia etapów: **Start - Wejście**, **Przetwar
 - **Frontend:** React, CSS
 - **Backend:** Flask, GenerativeAI, PyDub, Pyannote, Send in blue
 - **Testy:** Unittest
-- **Opcjonalnie:** Możliwość stworzenia wtyczki dla przeglądarek lub platform spotkań.
+- **Wtyczka:** Wtyczka zintegrowana z przeglądarka Google Chrome napisana w VanillaJS umożliwiająca nagrywanie ekranu, a także nagrywanie konkrentej karty w przeglądarce w tle.
   
 <br>
 <p>
