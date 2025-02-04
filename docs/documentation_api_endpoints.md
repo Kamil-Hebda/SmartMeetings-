@@ -19,14 +19,14 @@
 #### Nagłówek: Content-Type: multipart/form-data
 
 #### Body:
-```markdown
+```json
 {
   "video_file": "plik_wideo.webm"
 }
 ```
 
 #### Zapytanie:
-```markdown
+```json
 POST /upload_video
 Content-Type: multipart/form-data
 
@@ -35,7 +35,7 @@ Content-Disposition: form-data; name="video_file"; filename="meeting.webm"
 ```
 
 #### Odpowiedź (sukces):
-```markdown
+```json
 {
   "message": "File uploaded successfully!",
   "video_path": "/uploads/meeting.webm"
@@ -43,7 +43,7 @@ Content-Disposition: form-data; name="video_file"; filename="meeting.webm"
 ```
 
 #### Odpowiedź (błąd):
-```markdown
+```json
 {
   "message": "No file selected"
 }
@@ -59,14 +59,14 @@ Content-Disposition: form-data; name="video_file"; filename="meeting.webm"
 #### Nagłówek: Content-Type: application/json
 
 #### Body:
-```markdown
+```json
 {
   "video_path": "/uploads/meeting.webm"
 }
 ```
 
 #### Zapytanie:
-```markdown
+```json
 POST /generate_screenshots
 Content-Type: application/json
 
@@ -76,7 +76,7 @@ Content-Type: application/json
 ```
 
 #### Odpowiedź (sukces):
-```markdown
+```json
 {
   "message": "Screenshots created successfully",
   "screenshots": [
@@ -88,7 +88,7 @@ Content-Type: application/json
 ```
 
 #### Odpowiedź (błąd):
-```markdown
+```json
 {
   "message": "No video file path provided"
 }
@@ -104,7 +104,7 @@ Content-Type: application/json
 #### Nagłówek: Content-Type: application/json
 
 #### Body:
-```markdown
+```json
 {
   "video_path": "/uploads/meeting.webm",
   "options": {
@@ -120,7 +120,7 @@ Content-Type: application/json
 ```
 
 #### Zapytanie:
-```markdown
+```json
 POST /generate_notes
 Content-Type: application/json
 
@@ -139,7 +139,7 @@ Content-Type: application/json
 ```
 
 #### Odpowiedź (sukces):
-```markdown
+```json
 {
   "message": "Notes generated successfully",
   "notes": [
@@ -151,7 +151,7 @@ Content-Type: application/json
 ```
 
 #### Odpowiedź (błąd):
-```markdown
+```json
 {
   "message": "Error: No video file path provided"
 }
@@ -167,7 +167,7 @@ Content-Type: application/json
 #### Nagłówek: Content-Type: application/json
 
 #### Body:
-```markdown
+```json
 {
   "text": "To jest przykładowy tekst do podsumowania.",
   "prompt": "Podsumuj tekst w trzech punktach."
@@ -175,7 +175,7 @@ Content-Type: application/json
 ```
 
 #### Zapytanie:
-```markdown
+```json
 POST /generate_chat_notes
 Content-Type: application/json
 
@@ -186,7 +186,7 @@ Content-Type: application/json
 ```
 
 #### Odpowiedź (sukces):
-```markdown
+```json
 {
   "message": "Chat response generated successfully",
   "notes": "1. Przykładowy punkt 1. 2. Przykładowy punkt 2. 3. Przykładowy punkt 3."
@@ -194,7 +194,7 @@ Content-Type: application/json
 ```
 
 #### Odpowiedź (błąd):
-```markdown
+```json
 {
   "message": "Error: Invalid prompt"
 }
@@ -210,14 +210,14 @@ Content-Type: application/json
 #### Nagłówek: Content-Type: application/json
 
 #### Body:
-```markdown
+```json
 {
   "email": "anna@gmail.com"
 }
 ```
 
 #### Zapytanie:
-```markdown
+```json
 POST /generate_code
 Content-Type: application/json
 
@@ -227,14 +227,14 @@ Content-Type: application/json
 ```
 
 #### Odpowiedź (sukces):
-```markdown
+```json
 {
   "message": "Code sent successfully"
 }
 ```
 
 #### Odpowiedź (błąd):
-```markdown
+```json
 {
   "message": "Error: No email provided"
 }
@@ -250,7 +250,7 @@ Content-Type: application/json
 #### Nagłówek: Content-Type: application/json
 
 #### Body:
-```markdown
+```json
 {
   "email": "anna@gmail.com",
   "code": "123456"
@@ -258,7 +258,7 @@ Content-Type: application/json
 ```
 
 #### Zapytanie:
-```markdown
+```json
 POST /verify_code
 Content-Type: application/json
 
@@ -269,14 +269,14 @@ Content-Type: application/json
 ```
 
 #### Odpowiedź (sukces):
-```markdown
+```json
 {
   "message": "Code is correct"
 }
 ```
 
 #### Odpowiedź (błąd):
-```markdown
+```json
 {
   "message": "Invalid code"
 }
@@ -292,7 +292,7 @@ Content-Type: application/json
 #### Nagłówek: Content-Type: multipart/form-data
 
 #### Body:
-```markdown
+```json
 {
   "files": ["plik1.pdf", "plik2.txt"],
   "reciever": "[{'email': 'user1@example.com'}, {'email': 'user2@example.com'}]",
@@ -302,7 +302,7 @@ Content-Type: application/json
 ```
 
 #### Zapytanie:
-```markdown
+```json
 POST /send_notes
 Content-Type: multipart/form-data
 
@@ -326,14 +326,14 @@ To są notatki ze spotkania.
 ```
 
 #### Odpowiedź (sukces):
-```markdown
+```json
 {
   "message": "Notes sent successfully"
 }
 ```
 
 #### Odpowiedź (błąd):
-```markdown
+```json
 {
   "message": "Error: Failed to send notes"
 }
@@ -348,12 +348,12 @@ To są notatki ze spotkania.
 #### URL: /list_events
 
 #### Zapytanie:
-```markdown
+```json
 GET /list_events
 ```
 
 #### Odpowiedź (sukces):
-```markdown
+```json
 {
   "events": [
     {
@@ -366,7 +366,7 @@ GET /list_events
 ```
 
 #### Odpowiedź (błąd):
-```markdown
+```json
 {
   "error": "Google Calendar authentication failed"
 }
@@ -382,7 +382,7 @@ GET /list_events
 #### Nagłówek: Content-Type: application/json
 
 #### Body:
-```markdown
+```json
 {
   "summary": "Spotkanie projektowe",
   "location": "Sala konferencyjna",
@@ -406,7 +406,7 @@ GET /list_events
 ```
 
 #### Zapytanie:
-```markdown
+```json
 POST /create_event
 Content-Type: application/json
 
@@ -433,7 +433,7 @@ Content-Type: application/json
 ```
 
 #### Odpowiedź (sukces):
-```markdown
+```json
 {
   "message": "Event created successfully",
   "event_link": "https://calendar.google.com/event?eid=123"
@@ -441,7 +441,7 @@ Content-Type: application/json
 ```
 
 #### Odpowiedź (błąd):
-```markdown
+```json
 {
   "error": "Failed to create event"
 }
