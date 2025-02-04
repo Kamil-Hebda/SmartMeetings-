@@ -1,3 +1,4 @@
+
 # Uruchomienie aplikacji
 
 <br>
@@ -5,9 +6,8 @@
 ## Instalacja aplikacji
 
 ### Pobranie repozytorium
-
 ```bash
-https://github.com/Kamil-Hebda/SmartMeetings-.git
+git clone https://github.com/Kamil-Hebda/SmartMeetings-.git
 ```
 
 ### Instalacja rozszerzenia do Chrome
@@ -53,16 +53,13 @@ TOKEN_URI=<id urzytkowanika z Google Calander>
 AUTH_URI=<uwierzytelnie api Google Calender>
 ```
 
-### Start serwera Flask
+### Jak pobrać klucze API:
+* Załóż konto i utwórz darmowy klucz (ograniczona liczba użyć- wystarczająca do samodzielnego użytku):  
+   * **Google Api key** przejdź na stronę -> [Gemini Ai for Developers](https://ai.google.dev/).
+   * **Send in Blue API key** przejdź na stronę -> [Brevo](https://app.brevo.com).
+   * **Hugging Face Api key** przejdź na stronę -> [Hugging Face](https://huggingface.co/settings/tokens).
+* Aby pozyskać dostęp do diaryzacji trzeba przejść na stronę [Hugging Face - diaryzacja](https://huggingface.co/pyannote/segmentation-3.0) i zakceptować warunki korzystania z modelu.
 
-```bash
-cd backend/flask_api
-python3 app.py
-```
-
-### Start serwera React
-
-# Jak uruchomić aplikację
 
 ## Uruchomienie serwera Flask
 
@@ -86,9 +83,9 @@ python3 app.py
    npm install
    ```
 3. Aby wygenerować statyczne pliki produkcyjne:
-```bash
-npm run build
-```
+   ```bash
+   npm run build
+   ```
 4. Uruchom serwer deweloperski:
    ```bash
    npm run dev
