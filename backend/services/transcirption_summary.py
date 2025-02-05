@@ -49,6 +49,7 @@ def transcribe_video(video_path, transcription_precision):
         Exception: Jeśli wystąpi błąd podczas transkrypcji.
     """
     try:
+        transcription_precision = "base" #"medium"
         model = whisper.load_model(transcription_precision)
         result = model.transcribe(video_path)
         
@@ -115,7 +116,7 @@ def format_transcription_with_speakers(transcription_result, diarization_result)
                 segment_text.append(time_to_transcription[segment_time]['text'])
         if segment_text:
             formatted_transcription.append({
-                'text': f"Speaker {speaker}: " + " ".join(segment_text),
+                'text': f"Speaker {speaker}:\n " + " ".join(segment_text)+"\n\n",
                 'start': start,
                 'end': end
             })

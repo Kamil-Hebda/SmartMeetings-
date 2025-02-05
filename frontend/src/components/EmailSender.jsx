@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, TextField, IconButton, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
+import { Button, TextField, IconButton, List, ListItem, ListItemText, CircularProgress, FormControlLabel, Checkbox } from '@mui/material';
 import api from '../services/api';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -288,25 +288,29 @@ const EmailSender = ({ emailNotes }) => {
 
                     {step === 4 && (
                         <div>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    name="summary"
-                                    checked={selectedOptions.summary}
-                                    onChange={handleCheckboxChange}
-                                />
-                                Podsumowanie
-                            </label>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        name="summary"
+                                        checked={selectedOptions.summary}
+                                        onChange={handleCheckboxChange}
+                                        style={{ color: '#403E3B' }}
+                                    />
+                                }
+                                label="Podsumowanie"
+                            />
                             <br />
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    name="chatResponse"
-                                    checked={selectedOptions.chatResponse}
-                                    onChange={handleCheckboxChange}
-                                />
-                                Streszczenie
-                            </label>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        name="chatResponse"
+                                        checked={selectedOptions.chatResponse}
+                                        onChange={handleCheckboxChange}
+                                        style={{ color: '#403E3B' }}
+                                    />
+                                }
+                                label="Streszczenie"
+                            />
                             <br />
                             <p style={{ fontSize: '17px' }}>Podaj notatki, które chcesz wysłać na maila:</p>
                             <TextField
@@ -336,7 +340,10 @@ const EmailSender = ({ emailNotes }) => {
 };
 
 EmailSender.propTypes = {
-    emailNotes: PropTypes.string,
+    emailNotes: PropTypes.shape({
+        summary: PropTypes.string,
+        chatResponse: PropTypes.string,
+    }).isRequired,
 };
 
 export default EmailSender;
