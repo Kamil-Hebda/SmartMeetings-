@@ -8,6 +8,7 @@ Cała dokumentacja projektu znajduje się w folderze `docs/`. W szczególności:
 
 - **Inżynieria Wymagań**: Opis wszystkich wymagań funkcjonalnych i niefunkcjonalnych projektu.
 - **Dokumentacja API**: Szczegółowy opis endpointów API backendu wraz z przykładami zapytań i odpowiedziami.
+- **Dokumentacja testów jednostkowych**: Opis przetestowanych funkcjonalności aplikacji. 
 
 ## Struktura
 
