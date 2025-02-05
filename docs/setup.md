@@ -58,8 +58,16 @@ AUTH_URI=<uwierzytelnie api Google Calender>
    * **Google Api key** przejdź na stronę -> [Gemini Ai for Developers](https://ai.google.dev/).
    * **Send in Blue API key** przejdź na stronę -> [Brevo](https://app.brevo.com).
    * **Hugging Face Api key** przejdź na stronę -> [Hugging Face](https://huggingface.co/settings/tokens).
-* Aby pozyskać dostęp do diaryzacji trzeba przejść na stronę [Hugging Face - diaryzacja](https://huggingface.co/pyannote/segmentation-3.0) i zakceptować warunki korzystania z modelu.
 
+* Aby skonfigurować integrację z Google Calendar, wykonaj następujące kroki:
+**Uzyskanie Client ID, Client Secret, Token URI, Auth URI:**
+   - Przejdź na stronę **[Google Cloud Console](https://console.cloud.google.com/apis/credentials)**.
+   - W zakładce **Enabled APIs & Services** dodaj **Google Calendar API**.
+   - W zakładce **Credentials** utwórz nowe poświadczenia **OAuth 2.0 Client ID**.
+   - Pobierz plik **client_secrets.json**, który zawiera wymagane klucze.
+* Aby pozyskać dostęp do diaryzacji trzeba przejść na stronę [Hugging Face - diaryzacja](https://huggingface.co/pyannote/segmentation-3.0) i zakceptować warunki korzystania z modelu.
+* **Redirect URI** w naszej aplikacji domyślnie jest to http://localhost:8080/
+  
 
 ## Uruchomienie serwera Flask
 
