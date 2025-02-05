@@ -1,42 +1,45 @@
+# Dokumentacja frontend
+
 ## Opis Ogólny
 
 Frontend został stworzony przy użyciu React i Vite, która umożliwia inteligentne zarządzanie spotkaniami.
 
 ## Struktura Katalogów
-
+```
 frontend/
-├── .vite/           # Katalog generowany przez Vite (nie edytować ręcznie)
-├── dist/            # Katalog z buildem projektu (nie edytować ręcznie)
-├── node_modules/    # Katalog z zależnościami npm (nie edytować ręcznie)
-├── public/          # Statyczne zasoby (obrazy, favicon)
-│   └── vite.svg     # Ikona Vite
+├── .vite/               # Katalog generowany przez Vite (nie edytować ręcznie)
+├── dist/                # Katalog z buildem projektu (nie edytować ręcznie)
+├── node_modules/        # Katalog z zależnościami npm (nie edytować ręcznie)
+├── public/              # Statyczne zasoby (obrazy, favicon)
+│   └── vite.svg         # Ikona Vite
 └── src/
-    ├── assets/       # Obrazy i inne zasoby wizualne
-    │   └── fonts/    # Czcionki
-    ├── components/   # Komponenty React
-    │   ├── AddEvent.jsx       # Komponent dodawania wydarzenia do kalendarza
-    │   ├── AskModel.jsx       # Komponent do zadawania pytań modelowi językowemu
-    │   ├── EmailSender.jsx    # Komponent wysyłania notatek mailem
-    │   ├── EventCalendar.jsx  # Komponent wyświetlania kalendarza wydarzeń
-    │   ├── FileDownloader.jsx # Komponent pobierania plików w różnych formatach
-    │   ├── FileUpload.jsx     # Komponent przesyłania plików wideo
-    │   ├── NotesDisplay.jsx   # Komponent wyświetlania i generowania notatek
-    │   └── ScreenshotSelector.jsx # Komponent wyboru zrzutów ekranu
-    ├── pages/          # Komponenty reprezentujące strony
+    ├── assets/          # Obrazy i inne zasoby wizualne
+    │   └── fonts/       # Czcionki
+    ├── components/      # Komponenty React
+    │   ├── AddEvent.jsx         # Komponent dodawania wydarzenia do kalendarza
+    │   ├── AskModel.jsx         # Komponent do zadawania pytań modelowi językowemu
+    │   ├── EmailSender.jsx      # Komponent wysyłania notatek mailem
+    │   ├── EventCalendar.jsx    # Komponent wyświetlania kalendarza wydarzeń
+    │   ├── FileDownloader.jsx   # Komponent pobierania plików w różnych formatach
+    │   ├── FileUpload.jsx       # Komponent przesyłania plików wideo
+    │   ├── NotesDisplay.jsx     # Komponent wyświetlania i generowania notatek
+    │   └── ScreenshotSelector.jsx  # Komponent wyboru zrzutów ekranu
+    ├── pages/            # Komponenty reprezentujące strony
     │   └── Home.jsx      # Strona główna aplikacji
-    ├── services/       # Serwisy do komunikacji z API
+    ├── services/         # Serwisy do komunikacji z API
     │   └── api.js        # Konfiguracja API i funkcje do komunikacji z backendem
-    ├── App.jsx         # Główny komponent aplikacji
-    ├── App.css         # Style dla głównego komponentu
-    ├── index.css       # Globalne style
-    ├── main.jsx        # Punkt wejścia aplikacji
-    └── utils/          # Funkcje pomocnicze
-        └── sings_conventer.js    # Konwerter polskich znaków
-├── .eslintrc.js      # Konfiguracja ESLint
-├── index.html        # Główny plik HTML
-├── package-lock.json # Plik blokady wersji zależności
-├── package.json      # Plik manifestu projektu (dependencies, scripts)
-└── vite.config.js    # Konfiguracja Vite
+    ├── utils/            # Funkcje pomocnicze
+    │   └── sings_conventer.js  # Konwerter polskich znaków
+    ├── App.jsx           # Główny komponent aplikacji
+    ├── App.css           # Style dla głównego komponentu
+    ├── index.css         # Globalne style
+    ├── main.jsx          # Punkt wejścia aplikacji
+├── .eslintrc.js          # Konfiguracja ESLint
+├── index.html            # Główny plik HTML
+├── package-lock.json     # Plik blokady wersji zależności
+├── package.json          # Plik manifestu projektu (dependencies, scripts)
+└── vite.config.js        # Konfiguracja Vite
+```
 
 ## Technologie Użyte
 
