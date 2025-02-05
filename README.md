@@ -1,7 +1,16 @@
 # Smart Meetings
 
 ## Opis projektu
-Smart Meetings to projekt zawierający w sobie wtyczkę umożliwiającą nagrywanie ekranu, a nawet twojej kary w przeglądarce w tle w raz z całym system backendowo-frontendowym umożliwiający szeroki zakres przetwarzania twojego spotkania do zwięzłych notatek według twoich wymagań (transkrypcja, OCR, wykrywanie mówców, streszczenie) wraz z ich automatycznym wysłaniem na wskazanego przez ciebie adresy email.  
+
+**Smart Meetings** to kompleksowe rozwiązanie do nagrywania spotkań oraz ich automatycznego przetwarzania. Projekt obejmuje wtyczkę umożliwiającą nagrywanie ekranu lub wybranej karty przeglądarki w tle, a także pełny system backendowo-frontendowy. System oferuje zaawansowane funkcje przekształcania nagrań w zwięzłe notatki dostosowane do Twoich potrzeb, w tym:
+
+- **Transkrypcję rozmów** – konwersja mowy na tekst.
+- **OCR (rozpoznawanie tekstu ze zdjęć i prezentacji)**.
+- **Wykrywanie mówców** – identyfikacja osób mówiących w nagraniu.
+- **Generowanie streszczeń** – automatyczne podsumowanie kluczowych informacji.
+- **Automatyczne wysyłanie notatek** – możliwość przesyłania podsumowania spotkania na wskazane adresy e-mail.
+- **Generowanie zrzutów ekranu ze spotkania** – możliwość generowania screenshotów najważniejszych slajdów prezentacji.
+
 
 ## Dokumentacja
 Cała dokumentacja projektu znajduje się w folderze `docs/`. W szczególności:
