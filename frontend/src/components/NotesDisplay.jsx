@@ -8,7 +8,6 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ScreenshotSelector from './ScreenshotSelector'; // Import ScreenshotSelector
 import FileDownloader from './FileDownloader';
-import './NoteDisplay.css';
 
 /**
  * Komponent NotesDisplay:
