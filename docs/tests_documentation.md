@@ -108,12 +108,8 @@ Testy sprawdzają poprawność:
 
 ## Jak Uruchomić Testy?
 
-Testy można uruchomić na dwa sposoby:
 
-### **Z `pytest` (zalecane)**
-```bash
-pytest tests/
-```
+### **Uruchomienie ręczne (zalecane)**
 
 ### **Z `unittest`**
 ```bash
