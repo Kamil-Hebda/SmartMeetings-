@@ -44,10 +44,10 @@ const FileUpload = ({ onUpload }) => {
     return (
         <div className="left-panel">
             <Typography variant="h5" gutterBottom>
-                Import Video
+                Zaimportuj plik wideo
             </Typography>
             <Typography variant="body1" gutterBottom>
-                Upload a video file from your computer.
+                Prześlij plik wideo, aby rozpocząć generowanie notatek.
             </Typography>
             <form onSubmit={handleSubmit}>
                 <TextField
@@ -65,7 +65,7 @@ const FileUpload = ({ onUpload }) => {
                     disabled={loading || uploaded}
                     startIcon={loading && <CircularProgress size={20} color="inherit" />}
                 >
-                    {loading ? 'Uploading...' : uploaded ? 'File Uploaded' : 'Upload File'}
+                    {loading ? 'Przesyłanie...' : uploaded ? 'Plik załadowany' : 'Prześlij plik'}
                 </Button>
             </form>
         </div>

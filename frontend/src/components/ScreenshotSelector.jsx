@@ -28,7 +28,7 @@ const ScreenshotSelector = ({ screenshots, onSelectionChange, onConfirm }) => {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <h3>Select Screenshots</h3>
+      <h3>Wybierz zrzuty ekranu</h3>
       <ImageList sx={{ width: '90%', height: 450, margin: '0 auto' }} cols={3} rowHeight={164}>
         {screenshots.map((screenshot, index) => (
           <ImageListItem key={index}>
@@ -57,7 +57,7 @@ const ScreenshotSelector = ({ screenshots, onSelectionChange, onConfirm }) => {
           style={{ backgroundColor: '#403E3B', color: '#fff', marginTop: '10px' }}
           onClick={handleConfirm}
         >
-          Confirm Photos
+          Potwierdź zdjęcia
         </Button>
     </div>
   );

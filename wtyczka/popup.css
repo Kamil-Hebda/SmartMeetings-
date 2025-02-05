@@ -1,42 +1,48 @@
 body {
-    width: 400px;
-    padding: 20px;
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
-}
-
-.container {
-    width: 100%;
-    color: #343a40;
-}
-
-h1 {
-    color: #007bff;
+    margin: 0;
+    padding: 0;
+    background-color: #F2E9D8; /* Jasny beżowy jako tło główne */
+    color: #0D0D0D; /* Czarny jako kolor tekstu */
+  }
+  
+  h1, h2 {
+    color: #0D0D0D; /* Czarny */
     margin-bottom: 20px;
-}
-
-
-button {
-    font-size: 16px;
-    padding: 10px 20px;
-    margin: 8px 0;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%;
     text-align: center;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-#answer {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #e9ecef;
-    border-radius: 5px;
-    color: #495057;
-    font-size: 14px;
-}
+  }
+  
+  .container {
+    width: 250px; /* Ustawienie stałej szerokości kontenera */
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #FFFFFF; /* Biały dla kontrastu */
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .smart-button {
+    display: inline-block;
+    padding: 12px 24px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #403E3B; /* Ciemny obramowanie */
+    border-radius: 4px;
+    background-color: #403E3B; /* Ciemny kolor przycisku */
+    color: #FFFFFF; /* Biały tekst */
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s, border-color 0.3s;
+    width: 100%;
+  }
+  
+  .smart-button:hover {
+    background-color: #595856; /* Ciemnoszary na hover */
+    border-color: #595856;
+  }
+  
+  #answer {
+    color: #0D0D0D;
+    font-weight: bold;
+  }

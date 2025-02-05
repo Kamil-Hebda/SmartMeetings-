@@ -157,9 +157,9 @@ const NotesDisplay = ({ videoPath, options, onUpdate, showScreenshotSelector, su
 
     return (
         <div>
-            <h2>Generate Notes</h2>
+            <h2>Generuj notatki</h2>
             <Typography variant="body1" gutterBottom>
-                Click the button below to generate notes from the video.
+                Kliknij przycisk poniżej, aby wygenerować notatki z materiału wideo.
             </Typography>
             <Button
                 variant="contained"
@@ -168,7 +168,7 @@ const NotesDisplay = ({ videoPath, options, onUpdate, showScreenshotSelector, su
                 disabled={loading}
                 startIcon={loading && <CircularProgress size={20} color='#403E3B' />}
             >
-                {loading ? 'Generating...' : 'Create Notes'}
+                {loading ? 'Generowanie...' : 'Stwórz notatki'}
             </Button>
            {isScreenshotSelectorVisible && screenshots.length > 0 && (
               <div style={{ marginTop: '20px' }}>

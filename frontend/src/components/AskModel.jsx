@@ -40,7 +40,7 @@ const AskModel = ({ notes, onPromptChange, prompt, chatResponse, onChatResponseC
   return (
     <div className="left-panel">
       <div className="feature-box">
-        <h2>Prompt for Chat</h2>
+        <h2>Generuj notatki z Modelem AI</h2>
         {!notes && <p>Transkrypcja nie jest dostępna. Proszę poczekać na jej wygenerowanie, aby wpisać prompt.</p>}
         <TextField
           id="outlined-multiline-flexible"
@@ -62,7 +62,7 @@ const AskModel = ({ notes, onPromptChange, prompt, chatResponse, onChatResponseC
                 disabled={loading}
                 startIcon={loading && <CircularProgress size={20} color='#403E3B' />}
             >
-                {loading ? 'Generating...' : 'Generate Chat Response'}
+                {loading ? 'Generowanie...' : 'Zapytaj model'}
             </Button>
 
 

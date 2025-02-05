@@ -101,7 +101,7 @@ const Home = () => {
             borderColor: '#403E3B',
           }}
         >
-          Notes
+          Notatki
         </Button>
         <Button
           className='tab-button'
@@ -110,7 +110,7 @@ const Home = () => {
             borderColor: '#403E3B',
           }}
         >
-          Ask Chat
+          Notatki z Chatem
         </Button>
         <Button
           className='tab-button'
@@ -119,7 +119,7 @@ const Home = () => {
             borderColor: '#403E3B',
           }}
         >
-          Send Mail
+          Wyślij Maila
         </Button>
         <Button
           className='tab-button'
@@ -130,7 +130,7 @@ const Home = () => {
             borderColor: '#403E3B',
           }}
         >
-          Plan Meeting
+          Zaplanuj Spotkanie
         </Button>
       </ButtonGroup>
 
@@ -142,7 +142,7 @@ const Home = () => {
             </div>
             <div className="right-panel">
               <div className="feature-box">
-                <h2>Notes Options</h2>
+                <h2>Opcje notatek</h2>
                 <div className="options">
                   <FormControlLabel
                     control={
@@ -153,7 +153,7 @@ const Home = () => {
                         style={{ color: '#403E3B' }}
                       />
                     }
-                    label="Transcription"
+                    label="Transkrypcja"
                   />
                   <FormControlLabel
                     control={
@@ -175,7 +175,7 @@ const Home = () => {
                         style={{ color: '#403E3B' }}
                       />
                     }
-                    label="Screenshot"
+                    label="Zrzuty ekranu"
                   />
                   <FormControlLabel
                     control={
@@ -186,7 +186,7 @@ const Home = () => {
                         style={{ color: '#403E3B' }}
                       />
                     }
-                    label="Diarization"
+                    label="Diaryzacja"
                   />
                 </div>
                 <FileUpload onUpload={handleFileUpload} />
