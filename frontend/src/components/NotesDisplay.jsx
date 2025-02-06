@@ -127,7 +127,7 @@ const NotesDisplay = ({ videoPath, options, onUpdate, showScreenshotSelector, su
       setLoading(true);
       try {
           // Generowanie zrzutów ekranu
-            if (options.ocr || options.screenshot || options.diarization)
+            if (options.ocr || options.screenshot)
         {
             const screenshotResult = await generateScreenshots(videoPath);
               setScreenshots(screenshotResult.data.screenshots || []);

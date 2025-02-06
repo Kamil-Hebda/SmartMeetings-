@@ -49,7 +49,7 @@ def resize_frame(frame, width=640):
     height = int(frame.shape[0] * (width / frame.shape[1]))
     return cv2.resize(frame, (width, height))
 
-def is_significant_change(frame1, frame2, threshold=0.7):
+def is_significant_change(frame1, frame2, threshold=0.9):
     if frame1 is None or frame2 is None:
         print("Jedna z ramek jest pusta.")
         return False
